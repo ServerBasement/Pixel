@@ -1,0 +1,28 @@
+subprojects {
+    apply plugin: 'java'
+
+    group = 'it.mineblock'
+    version='1.0'
+
+    compileJava {
+        options.release = 17
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+
+    repositories {
+        mavenCentral()
+        maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+        maven { url = 'https://oss.sonatype.org/content/groups/public/' }
+        mavenLocal()
+    }
+
+    dependencies {
+        compileOnly "it.thedarksword.basement:api-bukkit:1.0"
+        compileOnly 'app.ashcon:sportpaper:1.8.8'
+        compileOnly "org.projectlombok:lombok:1.18.22"
+        annotationProcessor "org.projectlombok:lombok:1.18.22"
+    }
+}

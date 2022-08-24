@@ -1,0 +1,19 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+shadowJar {
+    archiveFileName = "Pixel-Master-${project.version}.jar"
+    dependencies {
+        exclude(dependency(':lombok'))
+        exclude(dependency(':spigot'))
+    }
+}
+
+artifacts {
+    archives shadowJar
+}
+
+dependencies {
+    implementation project(":Common")
+}
