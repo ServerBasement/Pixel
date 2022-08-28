@@ -1,7 +1,7 @@
 subprojects {
     apply plugin: 'java'
 
-    group = 'it.mineblock'
+    group = 'it.bowyard'
     version='1.0'
 
     compileJava {
@@ -20,7 +20,7 @@ subprojects {
     }
 
     dependencies {
-        compileOnly "it.thedarksword.basement:api-bukkit:1.0"
+        compileOnly "it.hemerald.basementx:api-bukkit:2.0"
         compileOnly 'app.ashcon:sportpaper:1.8.8'
         compileOnly "org.projectlombok:lombok:1.18.22"
         annotationProcessor "org.projectlombok:lombok:1.18.22"

@@ -1,5 +1,5 @@
 rootProject.name = 'Pixel'
-include 'Master'
-include 'Instance'
-include 'Common'
+include 'master'
+include 'instance'
+include 'common'
 
