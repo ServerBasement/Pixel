@@ -4,6 +4,7 @@ import it.bowyard.pixel.match.PixelType;
 import it.bowyard.pixel.match.SharedMatch;
 import it.bowyard.pixel.queue.StandardQueueStealer;
 import it.bowyard.pixel.server.ServerRancher;
+import org.redisson.api.RMapCache;
 
 import java.util.Optional;
 import java.util.Set;
@@ -13,6 +14,7 @@ public interface Queue<E extends Enum<E> & PixelType, T extends SharedMatch<E>, 
     E getType();
     void setRancher(ServerRancher rancher);
     ServerRancher getRancher();
+    RMapCache<String, T> summonTunnel();
 
     void loadShared();
 
