@@ -193,10 +193,7 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
     }
 
     @Override
-    public StandardQueueStealer summonStealer() {
-        return new StandardQueueStealer(
-                Basement.rclient().getLock("lock_" + queueType.name()),
-                (StandardQueue<?, ?, PixelParticipator>) this
-        );
+    public StandardQueueStealer<E, T, P> summonStealer() {
+        return new StandardQueueStealer<>(Basement.rclient().getLock("lock_" + queueType.name()), this);
     }
 }
