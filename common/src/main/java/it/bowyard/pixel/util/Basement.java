@@ -12,9 +12,7 @@ public class Basement {
 
     private static BasementBukkit basement;
 
-    public static BasementBukkit get() {
-        return basement;
-    }
+    public static BasementBukkit get() {return basement;}
 
     private static RedisManager redisManager;
 

@@ -41,8 +41,12 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
         this.mode = mode;
         this.queueType = queueType;
         this.mapSupplier = supplier;
-        tunnels = Basement.rclient().getMapCache(mode + "_" + queueType.name() + "_tunnels"); // bridge_V1_tunnels
+        tunnels = summonTunnel();
         loadShared();
+    }
+
+    RMapCache<String, T> summonTunnel() {
+        return Basement.rclient().getMapCache(mode + "_" + queueType.name() + "_tunnels"); // bridge_V1_tunnels
     }
 
     @Override
