@@ -32,7 +32,7 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
         return rancher;
     }
 
-    private QueueStatus status;
+    protected QueueStatus status;
 
     protected final RMapCache<String, T> tunnels;
     protected final Deque<P> players = new ArrayDeque<>();
