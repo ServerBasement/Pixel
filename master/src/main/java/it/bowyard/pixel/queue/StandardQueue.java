@@ -17,10 +17,10 @@ import java.util.*;
 
 public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends SharedMatch<E>, P extends PixelParticipator> implements Queue<E, T, P> {
 
-    private final String mode;
-    private final E queueType;
-    private final MapSupplier mapSupplier;
-    private ServerRancher rancher;
+    protected final String mode;
+    protected final E queueType;
+    protected final MapSupplier mapSupplier;
+    protected ServerRancher rancher;
 
     @Override
     public void setRancher(ServerRancher rancher) {
