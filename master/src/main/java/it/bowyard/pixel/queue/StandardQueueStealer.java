@@ -11,11 +11,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class StandardQueueStealer extends BukkitRunnable {
 
-    private final static int MAX_COUNT_NULL = 30;
-
-    private final RLock taskLock;
-    private final StandardQueue<?, ?, PixelParticipator> queue;
-    private int countNull = 0;
+    protected final static int MAX_COUNT_NULL = 30;
+    protected final RLock taskLock;
+    protected final StandardQueue<?, ?, PixelParticipator> queue;
+    protected int countNull = 0;
 
     @Override
     public void run() {
