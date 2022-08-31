@@ -9,7 +9,11 @@ import org.bukkit.entity.Player;
 public abstract class PixelParticipator implements Participator {
 
     private final Player player;
-    private Queue<?, ?, Participator> queue;
+    protected Queue queue;
+
+    public Queue getQueue() {
+        return queue;
+    }
 
     public void setQueue(Queue<?, ?, Participator> queue) {
         if (this.queue != null)

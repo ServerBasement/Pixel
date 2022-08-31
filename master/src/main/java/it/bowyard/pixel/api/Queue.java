@@ -38,6 +38,6 @@ public interface Queue<E extends Enum<E> & PixelType, T extends SharedMatch<E>, 
 
     void idle();
     void task();
-    <Q extends Queue<E, T, P>, S extends QueueStealer<E, T, P, Q>> S summonStealer();
+    QueueStealer summonStealer();
 
 }
