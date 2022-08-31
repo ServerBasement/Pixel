@@ -86,6 +86,8 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
         match.setServer(server.getServer().getName());
         match.setStatus(SharedMatchStatus.OPEN);
         match.setRequired(queueType.teams() * queueType.teamSize());
+        match.setTeamSize(queueType.teamSize());
+        match.setTeamsNumber(queueType.teams());
         match.setEffectivePlayers(0);
         match.setJoiningPlayers(0);
 

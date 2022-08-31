@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.redisson.api.RMapCache;
 import org.redisson.api.annotation.REntity;
 import org.redisson.api.annotation.RId;
+import org.redisson.api.annotation.RObjectField;
+import org.redisson.client.codec.IntegerCodec;
 
 import java.util.concurrent.TimeUnit;
 
@@ -30,7 +32,8 @@ public class SharedMatch<E extends Enum<E> & PixelType> {
     private SharedMatchStatus status;
     private String server;
 
-    private int required, effectivePlayers, joiningPlayers;
+    @RObjectField(codec = IntegerCodec.class)
+    private int required, teamSize, teamsNumber, effectivePlayers, joiningPlayers;
 
     public int totalCount() {
         return (this.getEffectivePlayers() + this.getJoiningPlayers());

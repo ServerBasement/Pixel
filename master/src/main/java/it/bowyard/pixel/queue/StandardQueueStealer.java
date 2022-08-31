@@ -41,7 +41,7 @@ public class StandardQueueStealer
             }
             P participator = playerOptional.get();
 
-            SharedMatch<?> match = queue.seekMatch(1);
+            T match = queue.seekMatch(1);
             if (match == null) {
                 queue.addPlayer(participator, true);
                 return;
