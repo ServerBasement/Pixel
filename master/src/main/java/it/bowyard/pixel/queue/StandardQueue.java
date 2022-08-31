@@ -3,6 +3,7 @@ package it.bowyard.pixel.queue;
 import it.bowyard.pixel.Pixel;
 import it.bowyard.pixel.api.MapSupplier;
 import it.bowyard.pixel.api.Queue;
+import it.bowyard.pixel.api.QueueStealer;
 import it.bowyard.pixel.match.PixelType;
 import it.bowyard.pixel.match.SharedMatch;
 import it.bowyard.pixel.match.SharedMatchStatus;
@@ -192,8 +193,4 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
         return Optional.ofNullable(players.poll());
     }
 
-    @Override
-    public StandardQueueStealer<E, T, P> summonStealer() {
-        return new StandardQueueStealer<>(Basement.rclient().getLock("lock_" + queueType.name()), this);
-    }
 }

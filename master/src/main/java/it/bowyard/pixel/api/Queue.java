@@ -2,7 +2,6 @@ package it.bowyard.pixel.api;
 
 import it.bowyard.pixel.match.PixelType;
 import it.bowyard.pixel.match.SharedMatch;
-import it.bowyard.pixel.queue.StandardQueueStealer;
 import it.bowyard.pixel.server.ServerRancher;
 import org.redisson.api.RMapCache;
 
@@ -39,6 +38,6 @@ public interface Queue<E extends Enum<E> & PixelType, T extends SharedMatch<E>, 
 
     void idle();
     void task();
-    StandardQueueStealer summonStealer();
+    <Q extends Queue<E, T, P>, S extends QueueStealer<E, T, P, Q>> S summonStealer();
 
 }
