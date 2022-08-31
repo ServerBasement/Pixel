@@ -15,7 +15,7 @@ public abstract class PixelParticipator implements Participator {
         return queue;
     }
 
-    public void setQueue(Queue<?, ?, Participator> queue) {
+    public void setQueue(Queue queue) {
         if (this.queue != null)
             removeFromQueue();
         this.queue = queue;
