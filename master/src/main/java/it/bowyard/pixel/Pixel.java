@@ -7,6 +7,7 @@ import it.bowyard.pixel.match.SharedMatch;
 import it.bowyard.pixel.server.ServerRancher;
 import it.bowyard.pixel.server.ServerRancherConfiguration;
 import it.bowyard.pixel.util.Basement;
+import it.bowyard.pixel.util.StaticTask;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
@@ -24,7 +25,8 @@ public abstract class Pixel <T extends Enum<T> & PixelType, P extends Participat
         return this.proxy;
     }
 
-    public Pixel() {
+    public Pixel(JavaPlugin plugin) {
+        new StaticTask(plugin);
         Basement.init();
     }
 

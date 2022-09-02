@@ -28,8 +28,8 @@ public abstract class PlayerReceiver<E extends Enum<E> & PixelType, T extends Sh
         joining.remove(username);
     }
 
-    abstract String bypassPermission();
-    abstract String lobbyName();
+    public abstract String bypassPermission();
+    public abstract String lobbyName();
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
@@ -47,9 +47,9 @@ public abstract class PlayerReceiver<E extends Enum<E> & PixelType, T extends Sh
     }
 
     @EventHandler
-    abstract void onQuit(PlayerQuitEvent event);
+    public abstract void onQuit(PlayerQuitEvent event);
 
     @EventHandler
-    abstract void onLeave(PlayerKickEvent event);
+    public abstract void onLeave(PlayerKickEvent event);
 
 }

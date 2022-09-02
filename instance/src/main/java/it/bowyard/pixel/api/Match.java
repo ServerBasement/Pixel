@@ -13,11 +13,11 @@ import org.redisson.api.map.event.EntryCreatedListener;
 public abstract class Match<E extends Enum<E> & PixelType, T extends SharedMatch<E>> {
 
     @Getter
-    private final T shared;
+    protected final T shared;
     @Getter
-    private final RMapCache<String, String> joining;
+    protected final RMapCache<String, String> joining;
 
-    private int listenerId;
+    protected int listenerId;
 
     public Match(T shared) {
         this.shared = shared;

@@ -7,7 +7,10 @@ import it.bowyard.pixel.match.SharedMatch;
 import it.bowyard.pixel.player.PlayerReceiver;
 import it.bowyard.pixel.topics.ShutdownHandler;
 import it.bowyard.pixel.topics.StatusHandler;
+import it.bowyard.pixel.util.Basement;
+import it.bowyard.pixel.util.StaticTask;
 import lombok.Getter;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class SubPixel<E extends Enum<E> & PixelType, T extends SharedMatch<E>, C extends Match<E, T>> {
 
@@ -24,14 +27,16 @@ public abstract class SubPixel<E extends Enum<E> & PixelType, T extends SharedMa
     @Getter
     private final PixelMatchManager<E, T, C> matchManager;
 
-    abstract PixelMatchManager<E, T, C> summonMatchManager();
+    public abstract PixelMatchManager<E, T, C> summonMatchManager();
 
     @Getter
     private final PlayerReceiver<E, T, C> playerReceiver;
 
-    abstract PlayerReceiver<E, T, C> summonPlayerReceiver();
+    public abstract PlayerReceiver<E, T, C> summonPlayerReceiver();
 
-    protected SubPixel() {
+    public SubPixel(JavaPlugin plugin) {
+        Basement.init();
+        new StaticTask(plugin);
         new ShutdownHandler();
         new StatusHandler();
         matchManager = summonMatchManager();
