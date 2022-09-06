@@ -33,7 +33,7 @@ public class ServerRancher implements Listener {
         this.configuration = configuration;
         available_indexes = IntStream.range(1, configuration.maxAmountOfServers()).boxed().collect(Collectors.toList());
         this.modeName = configuration.modeName();
-        this.MAX_MATCHES_PER_SERVER = configuration.maxMatcherPerServer();
+        this.MAX_MATCHES_PER_SERVER = configuration.maxMatchesPerServer();
         this.WARNING_PERCENTAGE = configuration.warningPercentage();
     }
 

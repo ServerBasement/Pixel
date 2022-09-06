@@ -14,10 +14,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class SubPixel<E extends Enum<E> & PixelType, T extends SharedMatch<E>, C extends Match<E, T>> {
 
-    public static void process(SubPixel<?, ?, ?> rawParent) {
-        raw = rawParent;
-    }
-
     protected static SubPixel<?, ?, ?> raw;
 
     public static <SE extends Enum<SE> & PixelType, ST extends SharedMatch<SE>, SC extends Match<SE, ST>> SubPixel<SE, ST, SC> getRaw() {
@@ -41,6 +37,7 @@ public abstract class SubPixel<E extends Enum<E> & PixelType, T extends SharedMa
         new StatusHandler();
         matchManager = summonMatchManager();
         playerReceiver = summonPlayerReceiver();
+        raw = this;
     }
 
 }
