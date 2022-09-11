@@ -47,14 +47,14 @@ public class ServerRancher implements Listener {
                 });
         if (Pixel.LEADER) {
             if (internalServers.size() < configuration.minimumIdle()) {
-                startServer(Math.abs(internalServers.size())-configuration.minimumIdle());
+                startServer(Math.abs(internalServers.size()-configuration.minimumIdle()));
             }
             StaticTask.runBukkitTaskTimer(new DangerTask(this), 20L*3, 20L*3, true);
         }
     }
 
     protected void startServer(int many) {
-        for (int i = 0; i != many; i++) {
+        for (int i = 0; i < many; i++) {
             if (available_indexes.isEmpty()) return;
             Integer index = available_indexes.remove(0);
             Basement.get().getRemoteCerebrumService().createServer(modeName + "_instance_" + index);
