@@ -47,7 +47,7 @@ public class ServerRancher implements Listener {
                 });
         if (Pixel.LEADER) {
             if (internalServers.size() < configuration.minimumIdle()) {
-                startServer(2);
+                startServer(Math.abs(internalServers.size())-configuration.minimumIdle());
             }
             StaticTask.runBukkitTaskTimer(new DangerTask(this), 20L*3, 20L*3, true);
         }
