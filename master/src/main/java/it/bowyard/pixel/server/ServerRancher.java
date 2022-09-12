@@ -1,6 +1,8 @@
 package it.bowyard.pixel.server;
 
 import it.bowyard.pixel.Pixel;
+import it.bowyard.pixel.match.PixelType;
+import it.bowyard.pixel.match.SharedMatch;
 import it.bowyard.pixel.util.Basement;
 import it.bowyard.pixel.util.StaticTask;
 import it.hemerald.basementx.api.bukkit.events.BasementNewServerFound;
@@ -16,9 +18,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Setter
-public class ServerRancher implements Listener {
+public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch<E>> implements Listener {
 
-    protected final ServerRancherConfiguration configuration;
+    protected final ServerRancherConfiguration<E, T> configuration;
 
     private final String modeName;
     protected int MAX_MATCHES_PER_SERVER;
@@ -26,9 +28,9 @@ public class ServerRancher implements Listener {
 
     private List<Integer> available_indexes;
 
-    protected final Map<String, InternalServer> internalServers = new HashMap<>();
+    protected final Map<String, InternalServer<E, T>> internalServers = new HashMap<>();
 
-    public ServerRancher(JavaPlugin plugin, ServerRancherConfiguration configuration) {
+    public ServerRancher(JavaPlugin plugin, ServerRancherConfiguration<E, T> configuration) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.configuration = configuration;
         available_indexes = IntStream.range(1, configuration.maxAmountOfServers()).boxed().collect(Collectors.toList());
@@ -42,7 +44,7 @@ public class ServerRancher implements Listener {
                 .forEach(server -> {
                     int index = Integer.parseInt(server.getName().split("_")[2]);
                     available_indexes.remove(Integer.valueOf(index));
-                    internalServers.put(server.getName(), configuration.internalSupplier(index, server, internalServers.size() > configuration.minimumIdle()));
+                    internalServers.put(server.getName(), configuration.internalSupplier(index, server, internalServers.size() > configuration.minimumIdle(), configuration.sharedMatchClass()));
                     Pixel.LOGGER.info("Found " + server.getName() + " server loaded at index " + index);
                 });
         if (Pixel.LEADER) {
@@ -65,7 +67,7 @@ public class ServerRancher implements Listener {
     protected void serverFound(BasementNewServerFound serverEvent) {
         if (serverEvent.getServer().getName().startsWith(modeName + "_instance_")) {
             int index = Integer.parseInt(serverEvent.getServer().getName().split("_")[2]);
-            InternalServer server = configuration.internalSupplier(index, serverEvent.getServer(), internalServers.size() > configuration.minimumIdle());
+            InternalServer<E, T> server = configuration.internalSupplier(index, serverEvent.getServer(), internalServers.size() > configuration.minimumIdle(), configuration.sharedMatchClass());
             internalServers.put(serverEvent.getServer().getName(), server);
             Pixel.LOGGER.info("Registered Server -> " + serverEvent.getServer().getName());
         }
@@ -74,14 +76,14 @@ public class ServerRancher implements Listener {
     @EventHandler
     protected void serverRemoved(BasementServerRemoved serverEvent) {
         if (serverEvent.getServer().getName().startsWith(modeName + "_instance_")) {
-            InternalServer server = internalServers.remove(serverEvent.getServer().getName());
+            InternalServer<E, T> server = internalServers.remove(serverEvent.getServer().getName());
             server.destroy();
             available_indexes.add(server.getIndex());
             System.out.println("Removed Server -> " + serverEvent.getServer().getName());
         }
     }
 
-    public InternalServer getServer(String name) {
+    public InternalServer<E, T> getServer(String name) {
         return internalServers.get(name);
     }
 
@@ -93,13 +95,13 @@ public class ServerRancher implements Listener {
         return internalServers.size();
     }
 
-    public Optional<InternalServer> seekServer() {
+    public Optional<InternalServer<E, T>> seekServer() {
         return internalServers.values().stream()
                 .filter(server -> server.size() != MAX_MATCHES_PER_SERVER && server.isSeekable())
                 .min(Comparator.comparingInt(InternalServer::size));
     }
 
-    public Optional<InternalServer> get(String name) {
+    public Optional<InternalServer<E, T>> get(String name) {
         return Optional.ofNullable(internalServers.get(name));
     }
 

@@ -12,14 +12,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
 
-public abstract class Pixel <T extends Enum<T> & PixelType, P extends Participator, V extends Queue<T, ? extends SharedMatch<T>, P>>  {
+public abstract class Pixel <
+        T extends Enum<T> & PixelType,
+        S extends SharedMatch<T>,
+        P extends Participator,
+        V extends Queue<T, S, P>
+        >  {
 
     public static Logger LOGGER;
     public static boolean LEADER;
 
-    private final PixelProxy<T, P, V> proxy = new PixelProxy<>();
+    private final PixelProxy<T, S, P, V> proxy = new PixelProxy<>();
 
-    public PixelProxy<T, P, V> process() {
+    public PixelProxy<T, S, P, V> process() {
         PixelProxy.rawProxy = this.proxy;
         proxy.getRancher().start();
         return this.proxy;
@@ -30,22 +35,22 @@ public abstract class Pixel <T extends Enum<T> & PixelType, P extends Participat
         Basement.init();
     }
 
-    public Pixel<T, P, V> metadata(boolean isLeader) {
+    public Pixel<T, S, P, V> metadata(boolean isLeader) {
         LEADER = isLeader;
         return this;
     }
 
-    public Pixel<T, P, V> registerLogger(Logger logger) {
+    public Pixel<T, S, P, V> registerLogger(Logger logger) {
         LOGGER = logger;
         return this;
     }
 
-    public Pixel<T, P, V> registerRancher(JavaPlugin plugin, ServerRancherConfiguration configuration) {
-        proxy.setRancher(new ServerRancher(plugin, configuration));
+    public Pixel<T, S, P, V> registerRancher(JavaPlugin plugin, ServerRancherConfiguration<T, S> configuration) {
+        proxy.setRancher(new ServerRancher<>(plugin, configuration));
         return this;
     }
 
-    public Pixel<T, P, V> registerQueue(V queue) {
+    public Pixel<T, S, P, V> registerQueue(V queue) {
         proxy.insertQueue(queue.getType(), queue);
         return this;
     }

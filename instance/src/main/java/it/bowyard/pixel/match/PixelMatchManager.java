@@ -29,7 +29,6 @@ public abstract class PixelMatchManager<E extends Enum<E> & PixelType, T extends
     }
 
     public void removeMatch(C match) {
-        matches.remove(match.getShared().getName());
         match.getJoining().destroy();
         match.getJoining().delete();
         shared.remove(match.getShared().getName());

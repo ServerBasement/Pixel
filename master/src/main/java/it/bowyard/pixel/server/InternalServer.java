@@ -2,6 +2,7 @@ package it.bowyard.pixel.server;
 
 import it.bowyard.pixel.Pixel;
 import it.bowyard.pixel.PixelProxy;
+import it.bowyard.pixel.match.PixelType;
 import it.bowyard.pixel.match.SharedMatch;
 import it.bowyard.pixel.queue.StandardQueue;
 import it.bowyard.pixel.topics.ShutdownRequest;
@@ -11,13 +12,15 @@ import lombok.Getter;
 import org.redisson.api.RMapCache;
 import org.redisson.api.map.event.EntryRemovedListener;
 
-public class InternalServer {
+public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch<E>> {
 
     @Getter
     private final int index;
     @Getter
     private final BukkitServer server;
     private final boolean terminable;
+
+    private final Class<T> sharedMatchClass;
 
     @Getter
     private boolean seekable;
@@ -38,10 +41,11 @@ public class InternalServer {
         return shared.size();
     }
 
-    public InternalServer(int index, BukkitServer server, boolean terminable) {
+    public InternalServer(int index, BukkitServer server, boolean terminable, Class<T> sharedMatchClass) {
         this.index = index;
         this.server = server;
         this.terminable = terminable;
+        this.sharedMatchClass = sharedMatchClass;
         this.shared = Basement.rclient().getMapCache(server.getName() + "_shared");
         if (Pixel.LEADER) {
             listenerId = shared.addListener((EntryRemovedListener<String, String>) event -> dropMatch(event.getKey()));
@@ -60,8 +64,8 @@ public class InternalServer {
     }
 
     public void dropMatch(String matchName) {
-        SharedMatch<?> match = Basement.rclient().getLiveObjectService().get(SharedMatch.class, matchName);
-        StandardQueue<?, ?, ?> queue = (StandardQueue<?, ?, ?>) PixelProxy.getRawProxy().getQueue(match.getType());
+        T match = Basement.rclient().getLiveObjectService().get(sharedMatchClass, matchName);
+        StandardQueue<E, T, ?> queue = (StandardQueue<E, T, ?>) PixelProxy.getRawProxy().getQueue(match.getType());
         queue.dropMatch(matchName);
     }
 

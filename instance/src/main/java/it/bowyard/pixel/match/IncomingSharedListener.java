@@ -12,7 +12,7 @@ public abstract class IncomingSharedListener<E extends Enum<E> & PixelType, T ex
 
     @Override
     public void onCreated(EntryEvent<String, String> event) {
-        T shared = (T) Basement.rclient().getLiveObjectService().get(SharedMatch.class, event.getKey());
+        T shared = Basement.rclient().getLiveObjectService().get(getMatchClass(), event.getKey());
         instantiate(shared, event.getKey(), event.getValue()).whenCompleteAsync(
                 (match, throwable) -> {
                     SubPixel.<E, T, C>getRaw().getMatchManager().putMatch(match);
@@ -20,6 +20,8 @@ public abstract class IncomingSharedListener<E extends Enum<E> & PixelType, T ex
                 }
         );
     }
+
+    public abstract Class<T> getMatchClass();
 
     public abstract CompletableFuture<C> instantiate(T shared, String key, String value);
 

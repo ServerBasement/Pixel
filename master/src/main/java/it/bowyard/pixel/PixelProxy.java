@@ -9,13 +9,18 @@ import lombok.Getter;
 
 import java.util.HashMap;
 
-public class PixelProxy<T extends Enum<T> & PixelType, P extends Participator, V extends Queue<T, ? extends SharedMatch<T>, P>> {
+public class PixelProxy<
+        T extends Enum<T> & PixelType,
+        S extends SharedMatch<T>,
+        P extends Participator,
+        V extends Queue<T, S, P>
+        > {
 
     @Getter
     protected static PixelProxy rawProxy;
 
     @Getter
-    private ServerRancher rancher;
+    private ServerRancher<T, S> rancher;
 
     private final HashMap<T, V> queues = new HashMap<>();
 
@@ -28,7 +33,7 @@ public class PixelProxy<T extends Enum<T> & PixelType, P extends Participator, V
         queues.put(key, queue);
     }
 
-    protected void setRancher(ServerRancher rancher) {
+    protected void setRancher(ServerRancher<T, S> rancher) {
         this.rancher = rancher;
     }
 

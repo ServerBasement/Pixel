@@ -11,8 +11,8 @@ import java.util.Set;
 public interface Queue<E extends Enum<E> & PixelType, T extends SharedMatch<E>, P extends Participator> {
 
     E getType();
-    void setRancher(ServerRancher rancher);
-    ServerRancher getRancher();
+    void setRancher(ServerRancher<E, T> rancher);
+    ServerRancher<E, T> getRancher();
     RMapCache<String, T> summonTunnel();
 
     void loadShared();

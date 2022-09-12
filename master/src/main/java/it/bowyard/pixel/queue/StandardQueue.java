@@ -21,15 +21,15 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
     protected final String mode;
     protected final E queueType;
     protected final MapSupplier mapSupplier;
-    protected ServerRancher rancher;
+    protected ServerRancher<E, T> rancher;
 
     @Override
-    public void setRancher(ServerRancher rancher) {
+    public void setRancher(ServerRancher<E, T> rancher) {
         this.rancher = rancher;
     }
 
     @Override
-    public ServerRancher getRancher() {
+    public ServerRancher<E, T> getRancher() {
         return rancher;
     }
 
@@ -66,7 +66,7 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
         if (died.size() == 0) return;
         for (T match : died) {
             String matchName = match.getName();
-            Optional<InternalServer> optInternal = rancher.get(match.getServer());
+            Optional<InternalServer<E, T>> optInternal = rancher.get(match.getServer());
             if (optInternal.isEmpty() || optInternal.get().removeMatch(matchName) == null)
                 dropMatch(match);
         }
@@ -76,9 +76,9 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
     @Override
     public T initMatch() {
         // Server Seeking
-        Optional<InternalServer> oiServer = rancher.seekServer();
+        Optional<InternalServer<E, T>> oiServer = rancher.seekServer();
         if (oiServer.isEmpty()) return null;
-        InternalServer server = oiServer.get();
+        InternalServer<E, T> server = oiServer.get();
 
         // Match creation
         //T match = (T) new SharedMatch<>(mode + UUID.randomUUID().toString().substring(0, 3) + UUID.randomUUID().toString().substring(1, 4), queueType);

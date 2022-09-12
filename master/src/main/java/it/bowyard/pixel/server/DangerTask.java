@@ -6,7 +6,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 @RequiredArgsConstructor
 public class DangerTask extends BukkitRunnable {
 
-    private final ServerRancher rancher;
+    private final ServerRancher<?, ?> rancher;
     @Override
     public void run() {
         rancher.internalServers.values().forEach(InternalServer::calledStop);
