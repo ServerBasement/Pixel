@@ -10,6 +10,7 @@ import it.bowyard.pixel.topics.StatusHandler;
 import it.bowyard.pixel.util.Basement;
 import it.bowyard.pixel.util.StaticTask;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class SubPixel<E extends Enum<E> & PixelType, T extends SharedMatch<E>, C extends Match<E, T>> {
@@ -37,6 +38,7 @@ public abstract class SubPixel<E extends Enum<E> & PixelType, T extends SharedMa
         new StatusHandler();
         matchManager = summonMatchManager();
         playerReceiver = summonPlayerReceiver();
+        Bukkit.getPluginManager().registerEvents(playerReceiver, plugin);
         raw = this;
     }
 
