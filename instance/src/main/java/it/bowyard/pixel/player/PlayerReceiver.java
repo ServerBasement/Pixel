@@ -17,7 +17,7 @@ import java.util.Map;
 
 public abstract class PlayerReceiver<E extends Enum<E> & PixelType, T extends SharedMatch<E>, C extends Match<E, T>> implements Listener {
 
-    private final static Map<String, String> joining = new HashMap<>();
+    protected final static Map<String, String> joining = new HashMap<>();
 
     public static void addJoining(String username, String matchname) {
         joining.put(username, matchname);
