@@ -17,10 +17,14 @@ public abstract class Match<E extends Enum<E> & PixelType, T extends SharedMatch
     @Getter
     protected final RMapCache<String, String> joining;
 
+    @Getter
+    protected E type;
+
     protected int listenerId;
 
     public Match(T shared) {
         this.shared = shared;
+        this.type = E.valueOf(shared.typeClass(), shared.getType());
         joining = Basement.rclient().getMapCache(shared.getName() + "_joining");
     }
 

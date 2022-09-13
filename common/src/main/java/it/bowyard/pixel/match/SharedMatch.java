@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class SharedMatch<E extends Enum<E> & PixelType> {
+public abstract class SharedMatch<E extends Enum<E> & PixelType> {
 
     public SharedMatch() {
         this.name = null;
@@ -27,7 +27,7 @@ public class SharedMatch<E extends Enum<E> & PixelType> {
 
     @RId
     private final String name;
-    private final E type;
+    private final String type;
 
     private SharedMatchStatus status;
     private String server;
@@ -64,5 +64,7 @@ public class SharedMatch<E extends Enum<E> & PixelType> {
         if (System.currentTimeMillis() > (changedAt+5000))
             Basement.redis().publishMessage(new StatusRequest(getServer(), getName()));
     }
+
+    public abstract Class<E> typeClass();
 
 }

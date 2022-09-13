@@ -3,7 +3,6 @@ package it.bowyard.pixel.queue;
 import it.bowyard.pixel.Pixel;
 import it.bowyard.pixel.api.MapSupplier;
 import it.bowyard.pixel.api.Queue;
-import it.bowyard.pixel.api.QueueStealer;
 import it.bowyard.pixel.match.PixelType;
 import it.bowyard.pixel.match.SharedMatch;
 import it.bowyard.pixel.match.SharedMatchStatus;
