@@ -25,7 +25,6 @@ public abstract class PixelMatchManager<E extends Enum<E> & PixelType, T extends
 
     public void putMatch(C match) {
         matches.put(match.getShared().getName(), match);
-        match.processFill();
     }
 
     public void removeMatch(C match) {
