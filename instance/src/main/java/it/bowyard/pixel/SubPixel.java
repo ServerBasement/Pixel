@@ -6,7 +6,9 @@ import it.bowyard.pixel.match.PixelType;
 import it.bowyard.pixel.match.SharedMatch;
 import it.bowyard.pixel.player.PlayerReceiver;
 import it.bowyard.pixel.topics.ShutdownHandler;
+import it.bowyard.pixel.topics.ShutdownRequest;
 import it.bowyard.pixel.topics.StatusHandler;
+import it.bowyard.pixel.topics.StatusRequest;
 import it.bowyard.pixel.util.Basement;
 import it.bowyard.pixel.util.StaticTask;
 import lombok.Getter;
@@ -40,6 +42,14 @@ public abstract class SubPixel<E extends Enum<E> & PixelType, T extends SharedMa
         playerReceiver = summonPlayerReceiver();
         Bukkit.getPluginManager().registerEvents(playerReceiver, plugin);
         raw = this;
+    }
+
+    public void shutdown() {
+        Basement.redis().clearTopicListeners(ShutdownRequest.TOPIC);
+        Basement.redis().clearTopicListeners(StatusRequest.TOPIC);
+        Bukkit.getOnlinePlayers().forEach(p -> Basement.get().getPlayerManager().sendToGameLobby(p.getName(), "bridge_lobby"));
+        matchManager.flush();
+        matchManager.clearShared();
     }
 
 }
