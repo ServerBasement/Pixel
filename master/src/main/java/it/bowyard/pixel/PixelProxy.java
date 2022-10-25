@@ -31,6 +31,7 @@ public class PixelProxy<
     protected void insertQueue(T key, V queue) {
         queue.setRancher(rancher);
         queues.put(key, queue);
+        queue.loadShared();
     }
 
     protected void setRancher(ServerRancher<T, S> rancher) {

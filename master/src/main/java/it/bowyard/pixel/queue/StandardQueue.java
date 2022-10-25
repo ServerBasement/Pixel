@@ -42,7 +42,6 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
         this.queueType = queueType;
         this.mapSupplier = supplier;
         tunnels = summonTunnel();
-        loadShared();
     }
 
     public RMapCache<String, T> summonTunnel() {
