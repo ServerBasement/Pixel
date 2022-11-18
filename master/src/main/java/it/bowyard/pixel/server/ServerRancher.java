@@ -3,15 +3,19 @@ package it.bowyard.pixel.server;
 import it.bowyard.pixel.Pixel;
 import it.bowyard.pixel.match.PixelType;
 import it.bowyard.pixel.match.SharedMatch;
+import it.bowyard.pixel.server.handler.MasterSwitchHandler;
+import it.bowyard.pixel.server.handler.MasterSwitchMessage;
 import it.bowyard.pixel.util.Basement;
 import it.bowyard.pixel.util.StaticTask;
 import it.hemerald.basementx.api.bukkit.events.BasementNewServerFound;
 import it.hemerald.basementx.api.bukkit.events.BasementServerRemoved;
+import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.redisson.api.RSetCache;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,7 +34,21 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch<
 
     protected final Map<String, InternalServer<E, T>> internalServers = new HashMap<>();
 
+    private final RSetCache<String> lobbies;
+
+    public MasterSwitchMessage unload() {
+        lobbies.remove(Basement.get().getServerID());
+        if (!Pixel.LEADER) return null;
+        Iterator<String> iterator = lobbies.iterator(1);
+        if (!iterator.hasNext())
+            return null;
+        return new MasterSwitchMessage(configuration.modeName(), iterator.next());
+    }
+
     public ServerRancher(JavaPlugin plugin, ServerRancherConfiguration<E, T> configuration) {
+        Basement.redis().registerTopicListener(MasterSwitchMessage.TOPIC, new MasterSwitchHandler(configuration.modeName()));
+        lobbies = Basement.rclient().getSetCache(configuration.modeName() + "_lobbies");
+        lobbies.add(Basement.get().getServerID());
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.configuration = configuration;
         available_indexes = IntStream.range(1, configuration.maxAmountOfServers()).boxed().collect(Collectors.toList());
@@ -51,8 +69,8 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch<
             if (internalServers.size() < configuration.minimumIdle()) {
                 startServer(Math.abs(internalServers.size()-configuration.minimumIdle()));
             }
-            StaticTask.runBukkitTaskTimer(new DangerTask(this), 20L*3, 20L*3, true);
         }
+        StaticTask.runBukkitTaskTimer(new DangerTask(this), 20L*3, 20L*3, true);
     }
 
     protected void startServer(int many) {

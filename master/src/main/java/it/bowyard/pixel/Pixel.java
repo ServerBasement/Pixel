@@ -6,8 +6,10 @@ import it.bowyard.pixel.match.PixelType;
 import it.bowyard.pixel.match.SharedMatch;
 import it.bowyard.pixel.server.ServerRancher;
 import it.bowyard.pixel.server.ServerRancherConfiguration;
+import it.bowyard.pixel.server.handler.MasterSwitchMessage;
 import it.bowyard.pixel.util.Basement;
 import it.bowyard.pixel.util.StaticTask;
+import lombok.Setter;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
@@ -20,6 +22,7 @@ public abstract class Pixel <
         >  {
 
     public static Logger LOGGER;
+    @Setter
     public static boolean LEADER;
 
     private final PixelProxy<T, S, P, V> proxy = new PixelProxy<>();
@@ -53,6 +56,12 @@ public abstract class Pixel <
     public Pixel<T, S, P, V> registerQueue(V queue) {
         proxy.insertQueue(queue.getType(), queue);
         return this;
+    }
+
+    public void shutdown() {
+        MasterSwitchMessage switchMessage = proxy.getRancher().unload();
+        if (switchMessage == null) return;
+        Basement.redis().publishMessage(switchMessage);
     }
 
 }

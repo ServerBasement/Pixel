@@ -1,5 +1,6 @@
 package it.bowyard.pixel.server;
 
+import it.bowyard.pixel.Pixel;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -9,6 +10,7 @@ public class DangerTask extends BukkitRunnable {
     private final ServerRancher<?, ?> rancher;
     @Override
     public void run() {
+        if (!Pixel.LEADER) return;
         rancher.internalServers.values().forEach(InternalServer::calledStop);
 
         double usage;

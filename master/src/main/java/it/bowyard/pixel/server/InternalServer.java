@@ -47,15 +47,15 @@ public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch
         this.terminable = terminable;
         this.sharedMatchClass = sharedMatchClass;
         this.shared = Basement.rclient().getMapCache(server.getName() + "_shared");
-        if (Pixel.LEADER) {
-            listenerId = shared.addListener((EntryRemovedListener<String, String>) event -> dropMatch(event.getKey()));
-        } else listenerId = -1;
+        listenerId = shared.addListener((EntryRemovedListener<String, String>) event -> {
+            if (!Pixel.LEADER) return;
+            dropMatch(event.getKey());
+        });
         seekable = true;
     }
 
     public void destroy() {
-        if (listenerId != -1)
-            shared.removeListener(listenerId);
+        shared.removeListener(listenerId);
         for (String matchName : shared.keySet()) {
             dropMatch(matchName);
         }
