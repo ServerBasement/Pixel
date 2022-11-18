@@ -39,6 +39,7 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch<
     public MasterSwitchMessage unload() {
         lobbies.remove(Basement.get().getServerID());
         if (!Pixel.LEADER) return null;
+        Pixel.setLEADER(false);
         Iterator<String> iterator = lobbies.iterator(1);
         if (!iterator.hasNext())
             return null;
