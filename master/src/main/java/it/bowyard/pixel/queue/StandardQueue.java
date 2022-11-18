@@ -75,7 +75,10 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
     public T initMatch() {
         // Server Seeking
         Optional<InternalServer<E, T>> oiServer = rancher.seekServer();
-        if (oiServer.isEmpty()) return null;
+        if (oiServer.isEmpty()) {
+            rancher.startServer(1);
+            return null;
+        }
         InternalServer<E, T> server = oiServer.get();
 
         // Match creation

@@ -55,7 +55,7 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch<
         }
     }
 
-    protected void startServer(int many) {
+    public void startServer(int many) {
         for (int i = 0; i < many; i++) {
             if (available_indexes.isEmpty()) return;
             Integer index = available_indexes.remove(0);
