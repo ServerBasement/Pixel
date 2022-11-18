@@ -58,10 +58,4 @@ public abstract class Pixel <
         return this;
     }
 
-    public void shutdown() {
-        MasterSwitchMessage switchMessage = proxy.getRancher().unload();
-        if (switchMessage == null) return;
-        Basement.redis().publishMessage(switchMessage);
-    }
-
 }

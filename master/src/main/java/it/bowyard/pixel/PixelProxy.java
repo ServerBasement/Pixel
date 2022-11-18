@@ -5,6 +5,8 @@ import it.bowyard.pixel.api.Queue;
 import it.bowyard.pixel.match.PixelType;
 import it.bowyard.pixel.match.SharedMatch;
 import it.bowyard.pixel.server.ServerRancher;
+import it.bowyard.pixel.server.handler.MasterSwitchMessage;
+import it.bowyard.pixel.util.Basement;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -36,6 +38,12 @@ public class PixelProxy<
 
     protected void setRancher(ServerRancher<T, S> rancher) {
         this.rancher = rancher;
+    }
+
+    public void shutdown() {
+        MasterSwitchMessage switchMessage = rancher.unload();
+        if (switchMessage == null) return;
+        Basement.redis().publishMessage(switchMessage);
     }
 
 }
