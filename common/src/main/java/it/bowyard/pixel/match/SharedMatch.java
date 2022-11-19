@@ -53,7 +53,7 @@ public abstract class SharedMatch<E extends Enum<E> & PixelType> {
     public boolean spectate(String player) {
         if (getStatus() != SharedMatchStatus.CLOSE) return false;
         RMapCache<String, String> mapping = Basement.rclient().getMapCache(getServer() + "_spectators");
-        mapping.put(player, getName(), 10L, TimeUnit.SECONDS);
+        mapping.put(player, getName(), 15L, TimeUnit.SECONDS);
         return true;
     }
 
