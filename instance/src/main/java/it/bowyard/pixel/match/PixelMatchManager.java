@@ -41,6 +41,8 @@ public abstract class PixelMatchManager<E extends Enum<E> & PixelType, T extends
     public void removeMatch(C match) {
         match.getJoining().destroy();
         match.getJoining().delete();
+        match.getShared_spectators().destroy();
+        match.getShared_spectators().delete();
         shared.remove(match.getShared().getName());
 
         World world = Bukkit.getWorld(match.getWorldName());

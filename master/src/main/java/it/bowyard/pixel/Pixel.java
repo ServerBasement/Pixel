@@ -6,7 +6,6 @@ import it.bowyard.pixel.match.PixelType;
 import it.bowyard.pixel.match.SharedMatch;
 import it.bowyard.pixel.server.ServerRancher;
 import it.bowyard.pixel.server.ServerRancherConfiguration;
-import it.bowyard.pixel.server.handler.MasterSwitchMessage;
 import it.bowyard.pixel.util.Basement;
 import it.bowyard.pixel.util.StaticTask;
 import lombok.Setter;

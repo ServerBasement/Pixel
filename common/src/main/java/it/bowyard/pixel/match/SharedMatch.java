@@ -12,8 +12,6 @@ import org.redisson.api.annotation.RId;
 import org.redisson.api.annotation.RObjectField;
 import org.redisson.client.codec.IntegerCodec;
 
-import java.util.concurrent.TimeUnit;
-
 @REntity
 @Getter
 @Setter

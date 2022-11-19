@@ -9,7 +9,6 @@ import it.bowyard.pixel.util.Basement;
 import it.bowyard.pixel.util.StaticTask;
 import it.hemerald.basementx.api.bukkit.events.BasementNewServerFound;
 import it.hemerald.basementx.api.bukkit.events.BasementServerRemoved;
-import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;

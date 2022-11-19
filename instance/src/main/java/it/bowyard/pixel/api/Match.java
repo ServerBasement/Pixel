@@ -1,17 +1,14 @@
 package it.bowyard.pixel.api;
 
-import it.bowyard.pixel.util.Basement;
 import it.bowyard.pixel.match.PixelType;
 import it.bowyard.pixel.match.SharedMatch;
 import it.bowyard.pixel.match.SharedMatchStatus;
 import it.bowyard.pixel.player.PlayerReceiver;
+import it.bowyard.pixel.util.Basement;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.redisson.api.RMapCache;
 import org.redisson.api.map.event.EntryCreatedListener;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public abstract class Match<E extends Enum<E> & PixelType, T extends SharedMatch<E>> {
 
@@ -19,6 +16,7 @@ public abstract class Match<E extends Enum<E> & PixelType, T extends SharedMatch
     protected final T shared;
     @Getter
     protected final RMapCache<String, String> joining;
+    @Getter
     protected final RMapCache<String, String> shared_spectators;
 
     @Getter
