@@ -10,12 +10,16 @@ import org.bukkit.entity.Player;
 import org.redisson.api.RMapCache;
 import org.redisson.api.map.event.EntryCreatedListener;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public abstract class Match<E extends Enum<E> & PixelType, T extends SharedMatch<E>> {
 
     @Getter
     protected final T shared;
     @Getter
     protected final RMapCache<String, String> joining;
+    protected final RMapCache<String, String> shared_spectators;
 
     @Getter
     protected E type;
@@ -26,11 +30,13 @@ public abstract class Match<E extends Enum<E> & PixelType, T extends SharedMatch
         this.shared = shared;
         this.type = E.valueOf(shared.typeClass(), shared.getType());
         joining = Basement.rclient().getMapCache(shared.getName() + "_joining");
+        shared_spectators = Basement.rclient().getMapCache(shared.getName() + "_spectators");
     }
 
     public void processFill() {
         joining.forEach(PlayerReceiver::addJoining);
         listenerId = joining.addListener((EntryCreatedListener<String, String>) event -> PlayerReceiver.addJoining(event.getKey(), event.getValue()));
+        shared_spectators.addListener((EntryCreatedListener<String, String>) event -> PlayerReceiver.addJoining(event.getKey(), event.getValue()));
     }
 
     public void stopProcessFill() {

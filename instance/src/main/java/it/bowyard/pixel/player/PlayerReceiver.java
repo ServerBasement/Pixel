@@ -2,17 +2,15 @@ package it.bowyard.pixel.player;
 
 import it.bowyard.pixel.SubPixel;
 import it.bowyard.pixel.api.Match;
+import it.bowyard.pixel.match.PixelType;
 import it.bowyard.pixel.match.SharedMatch;
 import it.bowyard.pixel.util.Basement;
-import it.bowyard.pixel.match.PixelType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.redisson.api.RMapCache;
-import org.redisson.api.map.event.EntryCreatedListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,13 +18,6 @@ import java.util.Map;
 public abstract class PlayerReceiver<E extends Enum<E> & PixelType, T extends SharedMatch<E>, C extends Match<E, T>> implements Listener {
 
     protected final static Map<String, String> joining = new HashMap<>();
-    protected static RMapCache<String, String> spectators;
-
-    public PlayerReceiver() {
-        spectators = Basement.rclient().getMapCache(Basement.get().getServerID() + "_spectators");
-        spectators.addListener((EntryCreatedListener<String, String>) event ->
-                Basement.get().getPlayerManager().sendToServer(event.getKey(), Basement.get().getServerID()));
-    }
 
     public static void addJoining(String username, String matchname) {
         joining.put(username, matchname);
@@ -44,7 +35,7 @@ public abstract class PlayerReceiver<E extends Enum<E> & PixelType, T extends Sh
     public void onJoin(PlayerJoinEvent event) {
         event.setJoinMessage(null);
         Player player = event.getPlayer();
-        String matchName = joining.containsKey(player.getName()) ? joining.get(player.getName()) : spectators.remove(player.getName());
+        String matchName = joining.get(player.getName());
         if (matchName == null) {
             if (player.hasPermission(bypassPermission())) return;
             Basement.get().getPlayerManager().sendToGameLobby(player.getName(), lobbyName());
