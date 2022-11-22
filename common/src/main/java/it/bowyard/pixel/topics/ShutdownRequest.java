@@ -10,10 +10,12 @@ public class ShutdownRequest extends BasementMessage {
     private final String server;
 
     public ShutdownRequest() {
+        super(TOPIC);
         server = null;
     }
 
     public ShutdownRequest(String server) {
+        super(TOPIC);
         this.server = server;
     }
 }

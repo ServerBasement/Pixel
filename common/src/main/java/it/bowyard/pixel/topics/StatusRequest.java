@@ -20,6 +20,7 @@ public class StatusRequest extends BasementMessage {
     }
 
     public StatusRequest(String server, String matchName) {
+        super(TOPIC);
         this.server = server;
         this.matchName = matchName;
     }

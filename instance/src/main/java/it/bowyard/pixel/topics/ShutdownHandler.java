@@ -2,8 +2,10 @@ package it.bowyard.pixel.topics;
 
 import it.bowyard.pixel.util.Basement;
 import it.hemerald.basementx.api.redis.messages.handler.BasementMessageHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Bukkit;
 
+@Slf4j(topic = "pixel")
 public class ShutdownHandler implements BasementMessageHandler<ShutdownRequest> {
 
     public ShutdownHandler() {
@@ -12,8 +14,10 @@ public class ShutdownHandler implements BasementMessageHandler<ShutdownRequest> 
 
     @Override
     public void execute(ShutdownRequest message) {
-        if (message.getServer().equals(Basement.get().getServerID()))
+        if (message.getServer().equals(Basement.get().getServerID())) {
+            log.info("ShutdownRequest received by Pixel");
             Bukkit.shutdown();
+        }
     }
 
     @Override
