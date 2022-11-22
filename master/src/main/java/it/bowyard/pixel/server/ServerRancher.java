@@ -9,6 +9,10 @@ import it.bowyard.pixel.util.Basement;
 import it.bowyard.pixel.util.StaticTask;
 import it.hemerald.basementx.api.bukkit.events.BasementNewServerFound;
 import it.hemerald.basementx.api.bukkit.events.BasementServerRemoved;
+import it.unimi.dsi.fastutil.ints.Int2LongArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2LongMap;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongList;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -73,11 +77,14 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch<
         StaticTask.runBukkitTaskTimer(new DangerTask(this), 20L*3, 20L*3, true);
     }
 
+    protected final Int2LongMap requestedServers = new Int2LongArrayMap();
+
     protected void startServer(int many) {
         for (int i = 0; i < many; i++) {
             if (available_indexes.isEmpty()) return;
             Integer index = available_indexes.remove(0);
             Basement.get().getRemoteCerebrumService().createServer(modeName + "_instance_" + index);
+            requestedServers.put(index.intValue(), System.currentTimeMillis());
         }
     }
 
@@ -85,6 +92,7 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch<
     protected void serverFound(BasementNewServerFound serverEvent) {
         if (serverEvent.getServer().getName().startsWith(modeName + "_instance_")) {
             int index = Integer.parseInt(serverEvent.getServer().getName().split("_")[2]);
+            requestedServers.remove(index);
             InternalServer<E, T> server = configuration.internalSupplier(index, serverEvent.getServer(), internalServers.size() > configuration.minimumIdle(), configuration.sharedMatchClass());
             internalServers.put(serverEvent.getServer().getName(), server);
             Pixel.LOGGER.info("Registered Server -> " + serverEvent.getServer().getName());

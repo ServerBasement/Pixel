@@ -12,9 +12,10 @@ public class DangerTask extends BukkitRunnable {
     public void run() {
         if (!Pixel.LEADER) return;
         rancher.internalServers.values().forEach(InternalServer::calledStop);
+        rancher.requestedServers.values().removeIf(value -> value-System.currentTimeMillis() > 60000);
 
         double usage;
-        try { usage = (double) (rancher.getRunningMatches() / (rancher.getRunningServers() * rancher.MAX_MATCHES_PER_SERVER)) * 100;
+        try { usage = (double) (rancher.getRunningMatches() / ((rancher.getRunningServers()+rancher.requestedServers.size()) * rancher.MAX_MATCHES_PER_SERVER)) * 100;
         } catch (Exception exp) { return; }
         if (usage >= rancher.WARNING_PERCENTAGE)
             rancher.startServer(rancher.configuration.incremental());

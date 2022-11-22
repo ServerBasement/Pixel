@@ -22,6 +22,8 @@ public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch
 
     private final Class<T> sharedMatchClass;
 
+    private final long startedAt = System.currentTimeMillis();
+
     @Getter
     private boolean seekable;
     private int stopCount = 0;
@@ -70,7 +72,7 @@ public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch
     }
 
     protected void calledStop() {
-        if (!terminable) return;
+        if (!terminable || (System.currentTimeMillis()-startedAt < 300000)) return;
         if (!shared.isEmpty()) {
             stopCount = Math.max(0, stopCount - shared.size());
             return;
