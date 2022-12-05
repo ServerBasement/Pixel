@@ -11,6 +11,7 @@ import it.bowyard.pixel.server.InternalServer;
 import it.bowyard.pixel.server.ServerRancher;
 import it.bowyard.pixel.util.Basement;
 import it.bowyard.pixel.util.StaticTask;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.redisson.api.RMapCache;
 
 import java.util.*;
@@ -134,10 +135,8 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
     public T seekMatch(int weight) {
         if (tunnels.isEmpty()) return createMatch();
         for (T match : tunnels.values()) {
-            if (match.getStatus() == SharedMatchStatus.WAITING_LAST) {
-                match.warranty();
+            if (match.getStatus() == SharedMatchStatus.WAITING_LAST)
                 continue;
-            }
             if (match.getStatus() == SharedMatchStatus.OPEN) {
                 if (!match.canCarry(weight)) continue;
                 return match;
@@ -191,6 +190,22 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
     @Override
     public Optional<P> stealPlayer() {
         return Optional.ofNullable(players.poll());
+    }
+
+    public void tillEOL() {
+        StaticTask.runBukkitTaskTimer(new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (tunnels == null) {
+                    cancel();
+                    return;
+                }
+                for (T value : tunnels.values()) {
+                    if (value.getStatus() != SharedMatchStatus.WAITING_LAST) continue;
+                    value.warranty();
+                }
+            }
+        }, 20L*3, 20L*3, true);
     }
 
 }

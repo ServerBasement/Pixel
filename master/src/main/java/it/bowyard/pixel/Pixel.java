@@ -54,6 +54,7 @@ public abstract class Pixel <
 
     public Pixel<T, S, P, V> registerQueue(V queue) {
         proxy.insertQueue(queue.getType(), queue);
+        queue.tillEOL();
         return this;
     }
 
