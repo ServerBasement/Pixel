@@ -42,11 +42,11 @@ public abstract class Match<E extends Enum<E> & PixelType, T extends SharedMatch
     }
 
     public void warranty(SharedMatchStatus status) {
-        shared.setStatus(status);
         shared.setJoiningPlayers(0);
         shared.setEffectivePlayers(getMatchWeight());
         joining.forEach((p, m) -> PlayerReceiver.removeJoining(p));
         joining.clear();
+        shared.setStatus(status);
     }
 
     abstract public String getWorldName();
