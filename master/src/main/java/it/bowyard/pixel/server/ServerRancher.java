@@ -39,6 +39,8 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch<
 
     private final RSetCache<String> lobbies;
 
+    private long nextPossibleStart = 0;
+
     public MasterSwitchMessage unload() {
         lobbies.remove(Basement.get().getServerID());
         if (!Pixel.LEADER) return null;
@@ -80,12 +82,14 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch<
     protected final Int2LongMap requestedServers = new Int2LongArrayMap();
 
     protected void startServer(int many) {
+        if(requestedServers.size() >= configuration.maxStartOfServerSimultaneously() && System.currentTimeMillis() < nextPossibleStart) return;
         for (int i = 0; i < many; i++) {
             if (available_indexes.isEmpty()) return;
             Integer index = available_indexes.remove(0);
             Basement.get().getRemoteCerebrumService().createServer(modeName + "_instance_" + index);
             requestedServers.put(index.intValue(), System.currentTimeMillis());
         }
+        nextPossibleStart = System.currentTimeMillis() + 30_000; // 30 seconds
     }
 
     @EventHandler
