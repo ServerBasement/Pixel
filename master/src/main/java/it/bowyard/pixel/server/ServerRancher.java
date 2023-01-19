@@ -11,8 +11,6 @@ import it.hemerald.basementx.api.bukkit.events.BasementNewServerFound;
 import it.hemerald.basementx.api.bukkit.events.BasementServerRemoved;
 import it.unimi.dsi.fastutil.ints.Int2LongArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2LongMap;
-import it.unimi.dsi.fastutil.longs.LongArrayList;
-import it.unimi.dsi.fastutil.longs.LongList;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -38,8 +36,6 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch<
     protected final Map<String, InternalServer<E, T>> internalServers = new HashMap<>();
 
     private final RSetCache<String> lobbies;
-
-    private long nextPossibleStart = 0;
 
     public MasterSwitchMessage unload() {
         lobbies.remove(Basement.get().getServerID());
@@ -80,16 +76,19 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch<
     }
 
     protected final Int2LongMap requestedServers = new Int2LongArrayMap();
+    private long nextPossibleStart = 0;
 
-    protected void startServer(int many) {
-        if(requestedServers.size() >= configuration.maxStartOfServerSimultaneously() && System.currentTimeMillis() < nextPossibleStart) return;
+    protected boolean startServer(int many) {
+        if(requestedServers.size() >= configuration.maxStartOfServerSimultaneously() && System.currentTimeMillis() < nextPossibleStart)
+            return false;
         for (int i = 0; i < many; i++) {
-            if (available_indexes.isEmpty()) return;
+            if (available_indexes.isEmpty()) return false;
             Integer index = available_indexes.remove(0);
             Basement.get().getRemoteCerebrumService().createServer(modeName + "_instance_" + index);
             requestedServers.put(index.intValue(), System.currentTimeMillis());
         }
         nextPossibleStart = System.currentTimeMillis() + 30_000; // 30 seconds
+        return true;
     }
 
     @EventHandler

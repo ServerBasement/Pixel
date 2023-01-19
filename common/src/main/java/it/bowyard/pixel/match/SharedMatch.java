@@ -28,6 +28,7 @@ public abstract class SharedMatch<E extends Enum<E> & PixelType> {
     private final String type;
 
     private SharedMatchStatus status;
+    private String map;
     private String server;
 
     @RObjectField(codec = IntegerCodec.class)

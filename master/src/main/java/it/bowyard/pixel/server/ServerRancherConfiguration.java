@@ -10,7 +10,9 @@ public abstract class ServerRancherConfiguration<E extends Enum<E> & PixelType, 
     public abstract int maxAmountOfServers();
     public abstract int maxMatchesPerServer();
     public abstract double warningPercentage();
-    public abstract int maxStartOfServerSimultaneously();
+    public int maxStartOfServerSimultaneously() {
+        return incremental();
+    }
     public abstract Class<T> sharedMatchClass();
 
     public int minimumIdle() {
