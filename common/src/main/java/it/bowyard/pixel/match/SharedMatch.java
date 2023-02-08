@@ -47,12 +47,14 @@ public abstract class SharedMatch<E extends Enum<E> & PixelType> {
         if (totalCount() == getRequired()) setStatus(SharedMatchStatus.WAITING_LAST);
         RMapCache<String, String> mapping = Basement.rclient().getMapCache(getName() + "_joining");
         mapping.put(player.getName(), getName());
+        System.out.println("Joining " + player.getName() + " " + getName());
     }
 
     public boolean spectate(String player) {
         if (getStatus() != SharedMatchStatus.CLOSE) return false;
         RMapCache<String, String> mapping = Basement.rclient().getMapCache(getName() + "_spectators");
         mapping.put(player, getName());
+        System.out.println("Spectating " + player.getName() + " " + getName());
         return true;
     }
 
@@ -60,8 +62,10 @@ public abstract class SharedMatch<E extends Enum<E> & PixelType> {
 
     public void warranty() {
         if (changedAt == -1) return;
-        if (System.currentTimeMillis() > (changedAt+5000))
+        if (System.currentTimeMillis() > (changedAt+5000)) {
             Basement.redis().publishMessage(new StatusRequest(getServer(), getName()));
+            System.out.println("Pixel staus request " + getServer() + " " + getName());
+        }
     }
 
     public abstract Class<E> typeClass();

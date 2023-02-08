@@ -13,6 +13,7 @@ public abstract class IncomingSharedListener<E extends Enum<E> & PixelType, T ex
     @Override
     public void onCreated(EntryEvent<String, String> event) {
         T shared = Basement.rclient().getLiveObjectService().get(getMatchClass(), event.getKey());
+        System.out.println("Entry Created: "+ event.getKey() + " " + event.getValue());
         instantiate(shared, event.getKey(), event.getValue()).whenCompleteAsync(
                 (match, throwable) -> {
                     if (throwable != null)
