@@ -19,6 +19,7 @@ public abstract class IncomingSharedListener<E extends Enum<E> & PixelType, T ex
                     if (throwable != null)
                         throwable.printStackTrace();
                     SubPixel.<E, T, C>getRaw().getMatchManager().putMatch(match);
+                    System.out.println("Match added to pixel's matchmanager: " + match);
                     match.processFill();
                 }
         );

@@ -60,6 +60,7 @@ public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch
     }
 
     public void destroy() {
+        System.out.println("Destroyed " + index);
         shared.removeListener(listenerId);
         for (String matchName : shared.keySet()) {
             dropMatch(matchName);
