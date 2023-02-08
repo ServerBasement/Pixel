@@ -77,27 +77,22 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
         // Server Seeking
         Optional<InternalServer<E, T>> oiServer = rancher.seekServer();
         if (oiServer.isEmpty()) return null;
-
-        return this.initMatch(oiServer.get());
+        return this.initMatch(oiServer.get(), mapSupplier.getMap(this.queueType));
     }
 
     public T initMatch(String mapName) {
         // Server Seeking
         Optional<InternalServer<E, T>> oiServer = rancher.seekServer();
         if (oiServer.isEmpty()) return null;
-
         return this.initMatch(oiServer.get(), mapName);
     }
 
-    public T initMatch(InternalServer<E, T> internalServer) {
-        return this.initMatch(internalServer, mapSupplier.getMap(this.queueType));
-    }
-
     public T initMatch(InternalServer<E, T> server, String mapName) {
-
         if (mapName == null) return null;
+        System.out.println("Init match: " + server.getServer().getName() + " " + server.isLoadingMatch() + " " + mapName);
+        server.loadingMatch(true);
+
         // Match creation
-        //T match = (T) new SharedMatch<>(mode + UUID.randomUUID().toString().substring(0, 3) + UUID.randomUUID().toString().substring(1, 4), queueType);
         T match = summonMatch();
         match.setServer(server.getServer().getName());
         match.setStatus(SharedMatchStatus.OPEN);
@@ -110,6 +105,7 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
 
         T shared = Basement.rclient().getLiveObjectService().merge(match);
         server.addMatch(shared.getName(), match.getMap());
+        server.loadingMatch(false);
         return shared;
     }
 

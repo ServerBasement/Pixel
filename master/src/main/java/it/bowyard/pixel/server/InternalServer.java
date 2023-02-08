@@ -30,6 +30,15 @@ public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch
 
     private final RMapCache<String, String> shared;
     private final int listenerId;
+    private boolean loadingMatch = false;
+
+    public void loadingMatch(boolean loadingMatch) {
+        this.loadingMatch = loadingMatch;
+    }
+
+    public boolean isLoadingMatch() {
+        return loadingMatch;
+    }
 
     public void addMatch(String matchName, String mapName) {
         shared.fastPut(matchName, mapName);
@@ -40,7 +49,7 @@ public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch
     }
 
     public int size() {
-        return shared.size();
+        return loadingMatch ? shared.size() + 1 : shared.size();
     }
 
     public InternalServer(int index, BukkitServer server, boolean terminable, Class<T> sharedMatchClass) {
