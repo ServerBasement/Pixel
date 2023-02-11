@@ -7,6 +7,7 @@ import it.bowyard.pixel.player.PlayerReceiver;
 import it.bowyard.pixel.util.Basement;
 import lombok.Getter;
 import org.bukkit.entity.Player;
+import org.redisson.api.RCountDownLatch;
 import org.redisson.api.RMapCache;
 import org.redisson.api.map.event.EntryCreatedListener;
 
@@ -29,20 +30,23 @@ public abstract class Match<E extends Enum<E> & PixelType, T extends SharedMatch
         this.type = E.valueOf(shared.typeClass(), shared.getType());
         joining = Basement.rclient().getMapCache(shared.getName() + "_joining");
         shared_spectators = Basement.rclient().getMapCache(shared.getName() + "_spectators");
-        System.out.println("Initializing match " + shared.getName() + " " + type);
     }
 
     public void processFill() {
+        System.out.println("Started ProcessFill: " + shared.getName() + " " + System.currentTimeMillis());
+
         joining.forEach(PlayerReceiver::addJoining);
         listenerId = joining.addListener((EntryCreatedListener<String, String>) event -> PlayerReceiver.addJoining(event.getKey(), event.getValue()));
         shared_spectators.addListener((EntryCreatedListener<String, String>) event -> PlayerReceiver.addJoining(event.getKey(), event.getValue()));
-        
-        System.out.println("Stared ProcessFill: " + shared.getName());
+
+        // TRY FIX
+        Basement.rclient().getCountDownLatch(shared.getName() + "_accept").countDown();
+
+        System.out.println("Finished ProcessFill: " + shared.getName() + " " + joining.keySet().toString() + " " + System.currentTimeMillis());
     }
 
     public void stopProcessFill() {
         joining.removeListener(listenerId);
-        System.out.println("Stopped ProcessFill: " + shared.getName());
     }
 
     public void warranty(SharedMatchStatus status) {
@@ -51,8 +55,6 @@ public abstract class Match<E extends Enum<E> & PixelType, T extends SharedMatch
         joining.forEach((p, m) -> PlayerReceiver.removeJoining(p));
         joining.clear();
         shared.setStatus(status);
-        
-        System.out.println("Warranty: "+ shared.getName() + ", setted status to " + status);
     }
 
     abstract public String getWorldName();

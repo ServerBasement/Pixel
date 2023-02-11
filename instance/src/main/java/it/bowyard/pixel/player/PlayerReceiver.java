@@ -27,7 +27,6 @@ public abstract class PlayerReceiver<E extends Enum<E> & PixelType, T extends Sh
 
     public static void removeJoining(String username) {
         joining.remove(username);
-        System.out.println("Removed join: " + username);
     }
 
     public abstract String bypassPermission();

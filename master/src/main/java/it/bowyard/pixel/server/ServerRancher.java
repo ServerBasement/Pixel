@@ -108,7 +108,6 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch<
             InternalServer<E, T> server = internalServers.remove(serverEvent.getServer().getName());
             server.destroy();
             available_indexes.add(server.getIndex());
-            System.out.println("Removed Server -> " + serverEvent.getServer().getName());
         }
     }
 

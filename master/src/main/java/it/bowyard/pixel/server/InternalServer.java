@@ -42,12 +42,9 @@ public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch
 
     public void addMatch(String matchName, String mapName) {
         shared.fastPut(matchName, mapName);
-        
-        System.out.println("Added match: " + matchName + " " + mapName);
     }
 
     public String removeMatch(String matchName) {
-        System.out.println("Removed match: " + matchName);
         return shared.remove(matchName);
     }
 
@@ -69,7 +66,6 @@ public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch
     }
 
     public void destroy() {
-        System.out.println("Destroyed " + index);
         shared.removeListener(listenerId);
         for (String matchName : shared.keySet()) {
             dropMatch(matchName);
@@ -82,7 +78,6 @@ public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch
         T match = Basement.rclient().getLiveObjectService().get(sharedMatchClass, matchName);
         StandardQueue<E, T, ?> queue = (StandardQueue<E, T, ?>) PixelProxy.getRawProxy().getQueue(E.valueOf(match.typeClass(), match.getType()));
         queue.dropMatch(matchName);
-        System.out.println("Dropped match: " + matchName);
     }
 
     protected void calledStop() {

@@ -12,9 +12,12 @@ import it.bowyard.pixel.server.ServerRancher;
 import it.bowyard.pixel.util.Basement;
 import it.bowyard.pixel.util.StaticTask;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.redisson.api.RCountDownLatch;
 import org.redisson.api.RMapCache;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends SharedMatch<E>, P extends PixelParticipator> implements Queue<E, T, P> {
 
@@ -74,22 +77,15 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
 
     @Override
     public T initMatch() {
-        // Server Seeking
-        Optional<InternalServer<E, T>> oiServer = rancher.seekServer();
-        if (oiServer.isEmpty()) return null;
-        return this.initMatch(oiServer.get(), mapSupplier.getMap(this.queueType));
+        return rancher.seekServer().map(etInternalServer -> this.initMatch(etInternalServer, mapSupplier.getMap(this.queueType))).orElse(null);
     }
 
     public T initMatch(String mapName) {
-        // Server Seeking
-        Optional<InternalServer<E, T>> oiServer = rancher.seekServer();
-        if (oiServer.isEmpty()) return null;
-        return this.initMatch(oiServer.get(), mapName);
+        return rancher.seekServer().map(etInternalServer -> this.initMatch(etInternalServer, mapName)).orElse(null);
     }
 
     public T initMatch(InternalServer<E, T> server, String mapName) {
         if (mapName == null) return null;
-        System.out.println("Init match: " + server.getServer().getName() + " " + server.isLoadingMatch() + " " + mapName);
         server.loadingMatch(true);
 
         // Match creation
@@ -104,6 +100,10 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
         match.setMap(mapName);
 
         T shared = Basement.rclient().getLiveObjectService().merge(match);
+
+        RCountDownLatch latch = Basement.rclient().getCountDownLatch(shared.getName() + "_accept");
+        latch.trySetCount(1);
+
         server.addMatch(shared.getName(), match.getMap());
         server.loadingMatch(false);
         return shared;
@@ -111,9 +111,19 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
 
     @Override
     public void validateMatch(T match) {
+        try {
+            RCountDownLatch latch = Basement.rclient().getCountDownLatch(match.getName() + "_accept");
+            if (!latch.await(1, TimeUnit.SECONDS)) {
+                Pixel.LOGGER.severe("[Queue " + queueType.toString() + "] Match " + match.getName() + " validation failed.");
+                dropMatch(match);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        Pixel.LOGGER.info("[Queue " + queueType.toString() + "] Match " + match.getName() + " validated.");
         tunnels.fastPut(match.getName(), match);
-        
-        System.out.println("Match validated: " + match.getName());
     }
 
     @Override
@@ -148,7 +158,6 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
         return new HashSet<>(tunnels.values());
     }
 
-
     @Override
     public T seekMatch(int weight) {
         if (tunnels.isEmpty()) return createMatch();
@@ -162,7 +171,6 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
         }
         return createMatch();
     }
-
 
     @Override
     public int matchLoad() {

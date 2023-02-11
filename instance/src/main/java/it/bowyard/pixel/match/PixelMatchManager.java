@@ -27,12 +27,9 @@ public abstract class PixelMatchManager<E extends Enum<E> & PixelType, T extends
 
     public void putMatch(C match) {
         matches.put(match.getShared().getName(), match);
-
-        System.out.println("Match added: " + match.getShared().getName());
     }
 
     public void flush() {
-        System.out.println("Flushing...");
         Iterator<C> iterator = matches.values().iterator();
         while (iterator.hasNext()) {
             C match = iterator.next();
@@ -47,10 +44,9 @@ public abstract class PixelMatchManager<E extends Enum<E> & PixelType, T extends
         match.getJoining().delete();
         match.getShared_spectators().destroy();
         match.getShared_spectators().delete();
+        Basement.rclient().getCountDownLatch(match.getShared().getName() + "_accept").delete();
         matches.remove(match.getShared().getName());
         shared.remove(match.getShared().getName());
-
-        System.out.println("Match removed: " + match.getShared().getName());
 
         World world = Bukkit.getWorld(match.getWorldName());
 
