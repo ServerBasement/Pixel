@@ -100,38 +100,20 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
         match.setMap(mapName);
 
         T shared = Basement.rclient().getLiveObjectService().merge(match);
-
-        RCountDownLatch latch = Basement.rclient().getCountDownLatch(shared.getName() + "_accept");
-        latch.trySetCount(1);
-
         server.addMatch(shared.getName(), match.getMap());
-        server.loadingMatch(false);
         return shared;
     }
 
     @Override
     public void validateMatch(T match) {
-        try {
-            RCountDownLatch latch = Basement.rclient().getCountDownLatch(match.getName() + "_accept");
-            if (!latch.await(1, TimeUnit.SECONDS)) {
-                Pixel.LOGGER.severe("[Queue " + queueType.toString() + "] Match " + match.getName() + " validation failed.");
-                dropMatch(match);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        Pixel.LOGGER.info("[Queue " + queueType.toString() + "] Match " + match.getName() + " validated.");
         tunnels.fastPut(match.getName(), match);
+        Pixel.LOGGER.info("[Queue " + queueType.toString() + "] Match " + match.getName() + " validated: " + System.currentTimeMillis());
     }
 
     @Override
     public T createMatch() {
         T match = initMatch();
-        if (match != null) {
-            validateMatch(match);
-        }
+        if (match == null) Pixel.LOGGER.warning("[Queue " + queueType.toString() + "] Failed to create match.");
         return match;
     }
 

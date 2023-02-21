@@ -4,10 +4,10 @@ import it.bowyard.pixel.match.PixelType;
 import it.bowyard.pixel.match.SharedMatch;
 import it.bowyard.pixel.match.SharedMatchStatus;
 import it.bowyard.pixel.player.PlayerReceiver;
+import it.bowyard.pixel.topics.ValidateRequest;
 import it.bowyard.pixel.util.Basement;
 import lombok.Getter;
 import org.bukkit.entity.Player;
-import org.redisson.api.RCountDownLatch;
 import org.redisson.api.RMapCache;
 import org.redisson.api.map.event.EntryCreatedListener;
 
@@ -39,8 +39,8 @@ public abstract class Match<E extends Enum<E> & PixelType, T extends SharedMatch
         listenerId = joining.addListener((EntryCreatedListener<String, String>) event -> PlayerReceiver.addJoining(event.getKey(), event.getValue()));
         shared_spectators.addListener((EntryCreatedListener<String, String>) event -> PlayerReceiver.addJoining(event.getKey(), event.getValue()));
 
-        // TRY FIX
-        Basement.rclient().getCountDownLatch(shared.getName() + "_accept").countDown();
+        // TRY FIX 2.0
+        validateMatch();
 
         System.out.println("Finished ProcessFill: " + shared.getName() + " " + joining.keySet().toString() + " " + System.currentTimeMillis());
     }
@@ -55,6 +55,11 @@ public abstract class Match<E extends Enum<E> & PixelType, T extends SharedMatch
         joining.forEach((p, m) -> PlayerReceiver.removeJoining(p));
         joining.clear();
         shared.setStatus(status);
+    }
+
+    public void validateMatch() {
+        System.out.println("Validating Match " + shared.getName());
+        Basement.redis().publishMessage(new ValidateRequest(shared.getServer(), shared.getName()));
     }
 
     abstract public String getWorldName();

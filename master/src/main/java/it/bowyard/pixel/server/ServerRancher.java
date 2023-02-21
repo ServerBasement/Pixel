@@ -3,8 +3,10 @@ package it.bowyard.pixel.server;
 import it.bowyard.pixel.Pixel;
 import it.bowyard.pixel.match.PixelType;
 import it.bowyard.pixel.match.SharedMatch;
+import it.bowyard.pixel.queue.handler.ValidateMatchHandler;
 import it.bowyard.pixel.server.handler.MasterSwitchHandler;
 import it.bowyard.pixel.server.handler.MasterSwitchMessage;
+import it.bowyard.pixel.topics.ValidateRequest;
 import it.bowyard.pixel.util.Basement;
 import it.bowyard.pixel.util.StaticTask;
 import it.hemerald.basementx.api.bukkit.events.BasementNewServerFound;
@@ -48,6 +50,7 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch<
     }
 
     public ServerRancher(JavaPlugin plugin, ServerRancherConfiguration<E, T> configuration) {
+        Basement.redis().registerTopicListener(ValidateRequest.TOPIC, new ValidateMatchHandler());
         Basement.redis().registerTopicListener(MasterSwitchMessage.TOPIC, new MasterSwitchHandler(configuration.modeName()));
         lobbies = Basement.rclient().getSetCache(configuration.modeName() + "_lobbies");
         lobbies.add(Basement.get().getServerID());

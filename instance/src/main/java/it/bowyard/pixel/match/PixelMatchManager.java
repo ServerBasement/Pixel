@@ -44,7 +44,6 @@ public abstract class PixelMatchManager<E extends Enum<E> & PixelType, T extends
         match.getJoining().delete();
         match.getShared_spectators().destroy();
         match.getShared_spectators().delete();
-        Basement.rclient().getCountDownLatch(match.getShared().getName() + "_accept").delete();
         matches.remove(match.getShared().getName());
         shared.remove(match.getShared().getName());
 
