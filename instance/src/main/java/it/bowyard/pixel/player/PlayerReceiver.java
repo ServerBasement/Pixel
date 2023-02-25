@@ -21,7 +21,6 @@ public abstract class PlayerReceiver<E extends Enum<E> & PixelType, T extends Sh
 
     public static void addJoining(String username, String matchname) {
         joining.put(username, matchname);
-        System.out.println("Added join: " + username + " " + matchname + " sending here...");
         Basement.get().getPlayerManager().sendToServer(username, Basement.get().getServerID());
     }
 

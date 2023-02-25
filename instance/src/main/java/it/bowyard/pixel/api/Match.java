@@ -33,16 +33,12 @@ public abstract class Match<E extends Enum<E> & PixelType, T extends SharedMatch
     }
 
     public void processFill() {
-        System.out.println("Started ProcessFill: " + shared.getName() + " " + System.currentTimeMillis());
-
         joining.forEach(PlayerReceiver::addJoining);
+
         listenerId = joining.addListener((EntryCreatedListener<String, String>) event -> PlayerReceiver.addJoining(event.getKey(), event.getValue()));
         shared_spectators.addListener((EntryCreatedListener<String, String>) event -> PlayerReceiver.addJoining(event.getKey(), event.getValue()));
 
-        // TRY FIX 2.0
         validateMatch();
-
-        System.out.println("Finished ProcessFill: " + shared.getName() + " " + joining.keySet().toString() + " " + System.currentTimeMillis());
     }
 
     public void stopProcessFill() {
@@ -58,7 +54,6 @@ public abstract class Match<E extends Enum<E> & PixelType, T extends SharedMatch
     }
 
     public void validateMatch() {
-        System.out.println("Validating Match " + shared.getName());
         Basement.redis().publishMessage(new ValidateRequest(shared.getServer(), shared.getName()));
     }
 
