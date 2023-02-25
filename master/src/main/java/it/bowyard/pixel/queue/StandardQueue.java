@@ -107,6 +107,7 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
     @Override
     public void validateMatch(T match) {
         tunnels.fastPut(match.getName(), match);
+        match.setValidated(true);
         Pixel.LOGGER.info("[Queue " + queueType.toString() + "] Match " + match.getName() + " validated: " + System.currentTimeMillis());
     }
 

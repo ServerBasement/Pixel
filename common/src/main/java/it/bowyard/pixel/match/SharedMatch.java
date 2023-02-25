@@ -12,8 +12,6 @@ import org.redisson.api.annotation.RId;
 import org.redisson.api.annotation.RObjectField;
 import org.redisson.client.codec.IntegerCodec;
 
-import java.util.concurrent.CountDownLatch;
-
 @REntity
 @Getter
 @Setter
@@ -32,6 +30,7 @@ public abstract class SharedMatch<E extends Enum<E> & PixelType> {
     private SharedMatchStatus status;
     private String map;
     private String server;
+    private boolean validated = false;
 
     @RObjectField(codec = IntegerCodec.class)
     private int required, teamSize, teamsNumber, effectivePlayers, joiningPlayers;
