@@ -8,7 +8,7 @@ import it.hemerald.basementx.api.redis.messages.handler.BasementMessageHandler;
 
 public class StatusHandler implements BasementMessageHandler<StatusRequest> {
 
-    private void post() {
+    public StatusHandler() {
         Basement.redis().registerTopicListener(StatusRequest.TOPIC, this);
     }
 

@@ -65,6 +65,13 @@ public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch
         seekable = true;
     }
 
+    public void validateMatch(String matchName) {
+        T match = Basement.rclient().getLiveObjectService().get(sharedMatchClass, matchName);
+        StandardQueue<E, T, ?> queue = (StandardQueue<E, T, ?>) PixelProxy.getRawProxy().getQueue(E.valueOf(match.typeClass(), match.getType()));
+        queue.validateMatch(match);
+        loadingMatch(false);
+    }
+
     public void destroy() {
         shared.removeListener(listenerId);
         for (String matchName : shared.keySet()) {
@@ -93,5 +100,4 @@ public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch
         }
         stopCount++;
     }
-
 }

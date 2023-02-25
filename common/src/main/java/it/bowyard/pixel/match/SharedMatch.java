@@ -30,6 +30,7 @@ public abstract class SharedMatch<E extends Enum<E> & PixelType> {
     private SharedMatchStatus status;
     private String map;
     private String server;
+    private boolean validated = false;
 
     @RObjectField(codec = IntegerCodec.class)
     private int required, teamSize, teamsNumber, effectivePlayers, joiningPlayers;
@@ -60,8 +61,9 @@ public abstract class SharedMatch<E extends Enum<E> & PixelType> {
 
     public void warranty() {
         if (changedAt == -1) return;
-        if (System.currentTimeMillis() > (changedAt+5000))
+        if (System.currentTimeMillis() > (changedAt+5000)) {
             Basement.redis().publishMessage(new StatusRequest(getServer(), getName()));
+        }
     }
 
     public abstract Class<E> typeClass();
