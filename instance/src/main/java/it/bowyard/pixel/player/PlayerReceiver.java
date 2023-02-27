@@ -29,6 +29,7 @@ public abstract class PlayerReceiver<E extends Enum<E> & PixelType, T extends Sh
     }
 
     public abstract String bypassPermission();
+
     public abstract String lobbyName();
 
     @EventHandler

@@ -20,11 +20,9 @@ public class PixelProxy<
 
     @Getter
     protected static PixelProxy rawProxy;
-
+    private final HashMap<T, V> queues = new HashMap<>();
     @Getter
     private ServerRancher<T, S> rancher;
-
-    private final HashMap<T, V> queues = new HashMap<>();
 
     public V getQueue(T key) {
         return queues.get(key);

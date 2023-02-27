@@ -13,12 +13,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
 
-public abstract class Pixel <
+public abstract class Pixel<
         T extends Enum<T> & PixelType,
         S extends SharedMatch<T>,
         P extends Participator,
         V extends Queue<T, S, P>
-        >  {
+        > {
 
     public static Logger LOGGER;
     @Setter
@@ -26,15 +26,15 @@ public abstract class Pixel <
 
     private final PixelProxy<T, S, P, V> proxy = new PixelProxy<>();
 
+    public Pixel(JavaPlugin plugin) {
+        new StaticTask(plugin);
+        Basement.init();
+    }
+
     public PixelProxy<T, S, P, V> process() {
         PixelProxy.rawProxy = this.proxy;
         proxy.getRancher().start();
         return this.proxy;
-    }
-
-    public Pixel(JavaPlugin plugin) {
-        new StaticTask(plugin);
-        Basement.init();
     }
 
     public Pixel<T, S, P, V> metadata(boolean isLeader) {

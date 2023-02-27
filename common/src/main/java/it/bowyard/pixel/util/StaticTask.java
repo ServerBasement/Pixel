@@ -8,6 +8,7 @@ import org.bukkit.scheduler.BukkitTask;
 public class StaticTask {
 
     private static JavaPlugin main;
+
     public StaticTask(JavaPlugin main) {
         StaticTask.main = main;
     }
@@ -28,14 +29,14 @@ public class StaticTask {
         return task.runTaskTimerAsynchronously(main, delay, period);
     }
 
-    public static BukkitTask runBukkitTaskLater(BukkitRunnable task , long delay, boolean async) {
+    public static BukkitTask runBukkitTaskLater(BukkitRunnable task, long delay, boolean async) {
         if (!async)
             return task.runTaskLater(main, delay);
         return task.runTaskLaterAsynchronously(main, delay);
     }
 
     public static BukkitTask runTask(Runnable runnable, boolean async) {
-        if (!async)return Bukkit.getScheduler().runTask(main, runnable);
+        if (!async) return Bukkit.getScheduler().runTask(main, runnable);
         return Bukkit.getScheduler().runTaskAsynchronously(main, runnable);
     }
 

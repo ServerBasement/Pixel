@@ -7,12 +7,17 @@ import it.hemerald.basementx.api.server.BukkitServer;
 public abstract class ServerRancherConfiguration<E extends Enum<E> & PixelType, T extends SharedMatch<E>> {
 
     public abstract String modeName();
+
     public abstract int maxAmountOfServers();
+
     public abstract int maxMatchesPerServer();
+
     public abstract double warningPercentage();
+
     public int maxStartOfServerSimultaneously() {
         return incremental();
     }
+
     public abstract Class<T> sharedMatchClass();
 
     public int minimumIdle() {

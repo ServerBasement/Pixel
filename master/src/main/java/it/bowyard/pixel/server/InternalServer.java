@@ -23,14 +23,25 @@ public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch
     private final Class<T> sharedMatchClass;
 
     private final long startedAt = System.currentTimeMillis();
-
+    private final RMapCache<String, String> shared;
+    private final int listenerId;
     @Getter
     private boolean seekable;
     private int stopCount = 0;
-
-    private final RMapCache<String, String> shared;
-    private final int listenerId;
     private boolean loadingMatch = false;
+
+    public InternalServer(int index, BukkitServer server, boolean terminable, Class<T> sharedMatchClass) {
+        this.index = index;
+        this.server = server;
+        this.terminable = terminable;
+        this.sharedMatchClass = sharedMatchClass;
+        this.shared = Basement.rclient().getMapCache(server.getName() + "_shared");
+        listenerId = shared.addListener((EntryRemovedListener<String, String>) event -> {
+            if (!Pixel.LEADER) return;
+            dropMatch(event.getKey());
+        });
+        seekable = true;
+    }
 
     public void loadingMatch(boolean loadingMatch) {
         this.loadingMatch = loadingMatch;
@@ -50,19 +61,6 @@ public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch
 
     public int size() {
         return loadingMatch ? shared.size() + 1 : shared.size();
-    }
-
-    public InternalServer(int index, BukkitServer server, boolean terminable, Class<T> sharedMatchClass) {
-        this.index = index;
-        this.server = server;
-        this.terminable = terminable;
-        this.sharedMatchClass = sharedMatchClass;
-        this.shared = Basement.rclient().getMapCache(server.getName() + "_shared");
-        listenerId = shared.addListener((EntryRemovedListener<String, String>) event -> {
-            if (!Pixel.LEADER) return;
-            dropMatch(event.getKey());
-        });
-        seekable = true;
     }
 
     public void validateMatch(String matchName) {
@@ -88,7 +86,7 @@ public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch
     }
 
     protected void calledStop() {
-        if (!terminable || (System.currentTimeMillis()-startedAt < 300000)) return;
+        if (!terminable || (System.currentTimeMillis() - startedAt < 300000)) return;
         if (!shared.isEmpty()) {
             stopCount = Math.max(0, stopCount - shared.size());
             return;

@@ -12,23 +12,25 @@ import it.bowyard.pixel.server.ServerRancher;
 import it.bowyard.pixel.util.Basement;
 import it.bowyard.pixel.util.StaticTask;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.redisson.api.RCountDownLatch;
 import org.redisson.api.RMapCache;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends SharedMatch<E>, P extends PixelParticipator> implements Queue<E, T, P> {
 
     protected final String mode;
     protected final E queueType;
     protected final MapSupplier mapSupplier;
+    protected final RMapCache<String, T> tunnels;
+    protected final Deque<P> players = new ArrayDeque<>();
     protected ServerRancher<E, T> rancher;
+    protected QueueStatus status;
 
-    @Override
-    public void setRancher(ServerRancher<E, T> rancher) {
-        this.rancher = rancher;
+    public StandardQueue(String mode, E queueType, MapSupplier supplier) {
+        this.mode = mode;
+        this.queueType = queueType;
+        this.mapSupplier = supplier;
+        tunnels = summonTunnel();
     }
 
     @Override
@@ -36,16 +38,9 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
         return rancher;
     }
 
-    protected QueueStatus status;
-
-    protected final RMapCache<String, T> tunnels;
-    protected final Deque<P> players = new ArrayDeque<>();
-
-    public StandardQueue(String mode, E queueType, MapSupplier supplier) {
-        this.mode = mode;
-        this.queueType = queueType;
-        this.mapSupplier = supplier;
-        tunnels = summonTunnel();
+    @Override
+    public void setRancher(ServerRancher<E, T> rancher) {
+        this.rancher = rancher;
     }
 
     public RMapCache<String, T> summonTunnel() {
@@ -214,7 +209,7 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
                     value.warranty();
                 }
             }
-        }, 20L*3, 20L*3, true);
+        }, 20L * 3, 20L * 3, true);
     }
 
 }

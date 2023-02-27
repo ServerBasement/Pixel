@@ -11,12 +11,16 @@ public class Basement {
     private static final RegisteredServiceProvider<BasementBukkit> provider = Bukkit.getServicesManager().getRegistration(BasementBukkit.class);
 
     private static BasementBukkit basement;
-
-    public static BasementBukkit get() {return basement;}
-
     private static RedisManager redisManager;
 
-    public static RedisManager redis() {return redisManager;}
+    public static BasementBukkit get() {
+        return basement;
+    }
+
+    public static RedisManager redis() {
+        return redisManager;
+    }
+
     public static RedissonClient rclient() {
         return redisManager.getRedissonClient();
     }

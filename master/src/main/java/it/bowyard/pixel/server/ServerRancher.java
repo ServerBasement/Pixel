@@ -28,26 +28,14 @@ import java.util.stream.IntStream;
 public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch<E>> implements Listener {
 
     protected final ServerRancherConfiguration<E, T> configuration;
-
+    protected final Map<String, InternalServer<E, T>> internalServers = new HashMap<>();
+    protected final Int2LongMap requestedServers = new Int2LongArrayMap();
     private final String modeName;
+    private final RSetCache<String> lobbies;
     protected int MAX_MATCHES_PER_SERVER;
     protected double WARNING_PERCENTAGE;
-
     private List<Integer> available_indexes;
-
-    protected final Map<String, InternalServer<E, T>> internalServers = new HashMap<>();
-
-    private final RSetCache<String> lobbies;
-
-    public MasterSwitchMessage unload() {
-        lobbies.remove(Basement.get().getServerID());
-        if (!Pixel.LEADER) return null;
-        Pixel.setLEADER(false);
-        Iterator<String> iterator = lobbies.iterator(1);
-        if (!iterator.hasNext())
-            return null;
-        return new MasterSwitchMessage(configuration.modeName(), iterator.next());
-    }
+    private long nextPossibleStart = 0;
 
     public ServerRancher(JavaPlugin plugin, ServerRancherConfiguration<E, T> configuration) {
         Basement.redis().registerTopicListener(ValidateRequest.TOPIC, new ValidateMatchHandler());
@@ -62,6 +50,16 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch<
         this.WARNING_PERCENTAGE = configuration.warningPercentage();
     }
 
+    public MasterSwitchMessage unload() {
+        lobbies.remove(Basement.get().getServerID());
+        if (!Pixel.LEADER) return null;
+        Pixel.setLEADER(false);
+        Iterator<String> iterator = lobbies.iterator(1);
+        if (!iterator.hasNext())
+            return null;
+        return new MasterSwitchMessage(configuration.modeName(), iterator.next());
+    }
+
     public void start() {
         Basement.get().getServerManager().getOnlineServers(modeName + "_instance_")
                 .forEach(server -> {
@@ -72,17 +70,14 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch<
                 });
         if (Pixel.LEADER) {
             if (internalServers.size() < configuration.minimumIdle()) {
-                startServer(Math.abs(internalServers.size()-configuration.minimumIdle()));
+                startServer(Math.abs(internalServers.size() - configuration.minimumIdle()));
             }
         }
-        StaticTask.runBukkitTaskTimer(new DangerTask(this), 20L*3, 20L*3, true);
+        StaticTask.runBukkitTaskTimer(new DangerTask(this), 20L * 3, 20L * 3, true);
     }
 
-    protected final Int2LongMap requestedServers = new Int2LongArrayMap();
-    private long nextPossibleStart = 0;
-
     protected boolean startServer(int many) {
-        if(requestedServers.size() >= configuration.maxStartOfServerSimultaneously() && System.currentTimeMillis() < nextPossibleStart)
+        if (requestedServers.size() >= configuration.maxStartOfServerSimultaneously() && System.currentTimeMillis() < nextPossibleStart)
             return false;
         for (int i = 0; i < many; i++) {
             if (available_indexes.isEmpty()) return false;

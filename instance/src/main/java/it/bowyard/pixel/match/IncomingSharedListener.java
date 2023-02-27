@@ -14,11 +14,11 @@ public abstract class IncomingSharedListener<E extends Enum<E> & PixelType, T ex
     public void onCreated(EntryEvent<String, String> event) {
         T shared = Basement.rclient().getLiveObjectService().get(getMatchClass(), event.getKey());
         instantiate(shared, event.getKey(), event.getValue()).whenCompleteAsync((match, throwable) -> {
-                if (throwable != null)
-                    throwable.printStackTrace();
-                SubPixel.<E, T, C>getRaw().getMatchManager().putMatch(match);
-                match.processFill();
-            }
+                    if (throwable != null)
+                        throwable.printStackTrace();
+                    SubPixel.<E, T, C>getRaw().getMatchManager().putMatch(match);
+                    match.processFill();
+                }
         );
     }
 

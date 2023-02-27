@@ -3,7 +3,7 @@ subprojects {
     apply plugin: 'maven-publish'
 
     group = 'it.bowyard.pixel'
-    version='1.0'
+    version = '1.0'
 
     compileJava {
         options.release = 17

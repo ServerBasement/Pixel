@@ -18,33 +18,32 @@ import org.redisson.client.codec.IntegerCodec;
 @RequiredArgsConstructor
 public abstract class SharedMatch<E extends Enum<E> & PixelType> {
 
-    public SharedMatch() {
-        this.name = null;
-        this.type = null;
-    }
-
     @RId
     private final String name;
     private final String type;
-
     private SharedMatchStatus status;
     private String map;
     private String server;
     private boolean validated = false;
-
     @RObjectField(codec = IntegerCodec.class)
     private int required, teamSize, teamsNumber, effectivePlayers, joiningPlayers;
+    private long changedAt = -1;
+
+    public SharedMatch() {
+        this.name = null;
+        this.type = null;
+    }
 
     public int totalCount() {
         return (this.getEffectivePlayers() + this.getJoiningPlayers());
     }
 
     public boolean canCarry(int weight) {
-        return !(totalCount()+weight > getRequired());
+        return !(totalCount() + weight > getRequired());
     }
 
     public void join(Player player) {
-        setJoiningPlayers(getJoiningPlayers()+1);
+        setJoiningPlayers(getJoiningPlayers() + 1);
         if (totalCount() == getRequired()) setStatus(SharedMatchStatus.WAITING_LAST);
         RMapCache<String, String> mapping = Basement.rclient().getMapCache(getName() + "_joining");
         mapping.put(player.getName(), getName());
@@ -57,11 +56,9 @@ public abstract class SharedMatch<E extends Enum<E> & PixelType> {
         return true;
     }
 
-    private long changedAt = -1;
-
     public void warranty() {
         if (changedAt == -1) return;
-        if (System.currentTimeMillis() > (changedAt+5000)) {
+        if (System.currentTimeMillis() > (changedAt + 5000)) {
             Basement.redis().publishMessage(new StatusRequest(getServer(), getName()));
         }
     }

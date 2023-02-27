@@ -13,8 +13,8 @@ import java.util.concurrent.CompletableFuture;
 
 public abstract class PixelMatchManager<E extends Enum<E> & PixelType, T extends SharedMatch<E>, C extends Match<E, T>> {
 
-    private final Map<String, C> matches = new HashMap<>();
     private static RMapCache<String, String> shared;
+    private final Map<String, C> matches = new HashMap<>();
 
     public PixelMatchManager(IncomingSharedListener<E, T, C> listener) {
         shared = Basement.rclient().getMapCache(Basement.get().getServerID() + "_shared");

@@ -12,8 +12,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class StandardQueueStealer
         <E extends Enum<E> & PixelType, T extends SharedMatch<E>, P extends PixelParticipator, Q extends StandardQueue<E, T, P>>
-        extends QueueStealer<E, T, P, Q>
-{
+        extends QueueStealer<E, T, P, Q> {
 
     protected final static int MAX_COUNT_NULL = 30;
     protected final RLock taskLock;

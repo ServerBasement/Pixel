@@ -58,8 +58,11 @@ public abstract class Match<E extends Enum<E> & PixelType, T extends SharedMatch
     }
 
     abstract public String getWorldName();
+
     abstract public void letJoin(Player player);
+
     abstract public void letQuit(Player player);
+
     abstract public int getMatchWeight();
 
 }

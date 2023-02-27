@@ -12,7 +12,8 @@ public class MasterSwitchHandler implements BasementMessageHandler<MasterSwitchM
 
     @Override
     public void execute(MasterSwitchMessage masterSwitchMessage) {
-        if (!modeName.equalsIgnoreCase(masterSwitchMessage.getMode()) && !masterSwitchMessage.getNewLeader().equalsIgnoreCase(Basement.get().getServerID())) return;
+        if (!modeName.equalsIgnoreCase(masterSwitchMessage.getMode()) && !masterSwitchMessage.getNewLeader().equalsIgnoreCase(Basement.get().getServerID()))
+            return;
         Pixel.LOGGER.info("This server is now mastering mode " + modeName);
         Pixel.setLEADER(true);
     }

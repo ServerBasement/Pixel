@@ -18,20 +18,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 public abstract class SubPixel<E extends Enum<E> & PixelType, T extends SharedMatch<E>, C extends Match<E, T>> {
 
     protected static SubPixel<?, ?, ?> raw;
-
-    public static <SE extends Enum<SE> & PixelType, ST extends SharedMatch<SE>, SC extends Match<SE, ST>> SubPixel<SE, ST, SC> getRaw() {
-        return (SubPixel<SE, ST, SC>) raw;
-    }
-
     @Getter
     private final PixelMatchManager<E, T, C> matchManager;
-
-    public abstract PixelMatchManager<E, T, C> summonMatchManager();
-
     @Getter
     private final PlayerReceiver<E, T, C> playerReceiver;
-
-    public abstract PlayerReceiver<E, T, C> summonPlayerReceiver();
 
     public SubPixel(JavaPlugin plugin) {
         Basement.init();
@@ -43,6 +33,14 @@ public abstract class SubPixel<E extends Enum<E> & PixelType, T extends SharedMa
         Bukkit.getPluginManager().registerEvents(playerReceiver, plugin);
         raw = this;
     }
+
+    public static <SE extends Enum<SE> & PixelType, ST extends SharedMatch<SE>, SC extends Match<SE, ST>> SubPixel<SE, ST, SC> getRaw() {
+        return (SubPixel<SE, ST, SC>) raw;
+    }
+
+    public abstract PixelMatchManager<E, T, C> summonMatchManager();
+
+    public abstract PlayerReceiver<E, T, C> summonPlayerReceiver();
 
     public void shutdown() {
         Basement.redis().clearTopicListeners(ShutdownRequest.TOPIC);
