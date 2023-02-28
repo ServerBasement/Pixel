@@ -2,7 +2,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'maven-publish'
 
-    group = 'it.bowyard.pixel'
+    group = 'it.ohalee.pixel'
     version = '1.0'
 
     compileJava {

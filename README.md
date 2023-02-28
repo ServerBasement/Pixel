@@ -10,7 +10,7 @@ Pixel supporta più match su una singola istanza e più lobby.
 
 ## Sviluppo
 
-Pixel è stato pensato e creato da @BowYard. Successivamente sistemato e mantenuto da @ohAlee
+Pixel è stato pensato e creato da @ohAlee. Successivamente sistemato e mantenuto da @ohAlee
 E' organizzato in moduli:
 
 - master
@@ -33,9 +33,9 @@ Per usare Pixel nel proprio minigame è altamente consigliato gestire il proprio
 ### Gradle
 
 ```bash
-  implementation "it.bowyard.pixel:master:1.0"    # master module
-  implementation "it.bowyard.pixel:instance:1.0"  # instance module
-  implementation "it.bowyard.pixel:common:1.0"    # common module
+  implementation "it.ohalee.pixel:master:1.0"    # master module
+  implementation "it.ohalee.pixel:instance:1.0"  # instance module
+  implementation "it.ohalee.pixel:common:1.0"    # common module
 ```
 
 ### Master
