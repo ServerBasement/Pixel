@@ -39,7 +39,7 @@ public abstract class SharedMatch<E extends Enum<E> & PixelType> {
     }
 
     public boolean canCarry(int weight) {
-        return !(totalCount() + weight > getRequired());
+        return totalCount() + weight <= getRequired();
     }
 
     public void join(Player player) {
