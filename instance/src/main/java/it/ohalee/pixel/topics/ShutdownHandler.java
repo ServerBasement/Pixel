@@ -1,7 +1,7 @@
 package it.ohalee.pixel.topics;
 
 import it.ohalee.pixel.util.Basement;
-import it.hemerald.basementx.api.redis.messages.handler.BasementMessageHandler;
+import it.ohalee.basementlib.api.redis.messages.handler.BasementMessageHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Bukkit;
 
@@ -14,7 +14,7 @@ public class ShutdownHandler implements BasementMessageHandler<ShutdownRequest> 
 
     @Override
     public void execute(ShutdownRequest message) {
-        if (message.getServer().equals(Basement.get().getServerID())) {
+        if (message.getServer().equals(Basement.getBukkit().getServerID())) {
             log.info("ShutdownRequest received by Pixel");
             Bukkit.shutdown();
         }

@@ -1,5 +1,6 @@
 package it.ohalee.pixel.match;
 
+import it.ohalee.pixel.SubPixel;
 import it.ohalee.pixel.api.Match;
 import it.ohalee.pixel.util.Basement;
 import it.ohalee.pixel.util.StaticTask;
@@ -17,7 +18,7 @@ public abstract class PixelMatchManager<E extends Enum<E> & PixelType, T extends
     private final Map<String, C> matches = new HashMap<>();
 
     public PixelMatchManager(IncomingSharedListener<E, T, C> listener) {
-        shared = Basement.rclient().getMapCache(Basement.get().getServerID() + "_shared");
+        shared = Basement.rclient().getMapCache(Basement.getBukkit().getServerID() + "_shared");
         shared.addListener(listener);
     }
 
@@ -51,7 +52,7 @@ public abstract class PixelMatchManager<E extends Enum<E> & PixelType, T extends
 
         CompletableFuture.runAsync(() -> {
             for (Player player : world.getPlayers())
-                Basement.get().getPlayerManager().sendToGameLobby(player.getName(), getLobby());
+                SubPixel.getRaw().getPlayerManager().sendToGameLobby(player.getName(), getLobby());
         }).whenComplete((voidValue, error) ->
                 StaticTask.runBukkitTaskTimer(new WorldRemoverTask(world), 0L, 10L, false));
     }

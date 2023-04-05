@@ -1,6 +1,6 @@
 package it.ohalee.pixel.topics;
 
-import it.hemerald.basementx.api.redis.messages.BasementMessage;
+import it.ohalee.basementlib.api.redis.messages.BasementMessage;
 import lombok.Getter;
 
 @Getter

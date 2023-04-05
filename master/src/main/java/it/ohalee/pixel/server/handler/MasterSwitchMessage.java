@@ -1,6 +1,6 @@
 package it.ohalee.pixel.server.handler;
 
-import it.hemerald.basementx.api.redis.messages.BasementMessage;
+import it.ohalee.basementlib.api.redis.messages.BasementMessage;
 import lombok.Getter;
 
 @Getter
