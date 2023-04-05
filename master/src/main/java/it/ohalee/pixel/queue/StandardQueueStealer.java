@@ -34,7 +34,7 @@ public class StandardQueueStealer
             }
 
             Optional<P> playerOptional = queue.stealPlayer();
-            if (playerOptional.isEmpty()) {
+            if (!playerOptional.isPresent()) {
                 countNull++;
                 return;
             }

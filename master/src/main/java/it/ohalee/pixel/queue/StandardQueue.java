@@ -64,7 +64,7 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
         for (T match : died) {
             String matchName = match.getName();
             Optional<InternalServer<E, T>> optInternal = rancher.get(match.getServer());
-            if (optInternal.isEmpty() || optInternal.get().removeMatch(matchName) == null)
+            if (!optInternal.isPresent() || optInternal.get().removeMatch(matchName) == null)
                 dropMatch(match);
         }
         Pixel.LOGGER.info("[Queue " + queueType.toString() + "] Found and clearing " + died.size() + " died matches.");
