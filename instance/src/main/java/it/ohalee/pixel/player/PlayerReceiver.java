@@ -21,7 +21,7 @@ public abstract class PlayerReceiver<E extends Enum<E> & PixelType, T extends Sh
 
     public static void addJoining(String username, String matchname) {
         joining.put(username, matchname);
-        Basement.get().getPlayerManager().sendToServer(username, Basement.get().getServerID());
+        SubPixel.getRaw().getPlayerManager().sendToServer(username, Basement.getBukkit().getServerID());
     }
 
     public static void removeJoining(String username) {
@@ -39,7 +39,7 @@ public abstract class PlayerReceiver<E extends Enum<E> & PixelType, T extends Sh
         String matchName = joining.get(player.getName());
         if (matchName == null) {
             if (player.hasPermission(bypassPermission())) return;
-            Basement.get().getPlayerManager().sendToGameLobby(player.getName(), lobbyName());
+            SubPixel.getRaw().getPlayerManager().sendToGameLobby(player.getName(), lobbyName());
             return;
         }
         C match = SubPixel.<E, T, C>getRaw().getMatchManager().getMatch(matchName);

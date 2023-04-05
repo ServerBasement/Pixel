@@ -21,11 +21,11 @@ public class DangerTask extends BukkitRunnable {
             return;
         }
         if (usage >= rancher.WARNING_PERCENTAGE) {
-            if (!rancher.startServer(rancher.configuration.incremental())) {
+            if (!rancher.startServer(rancher.configuration.serverManager().incremental())) {
                 return;
             }
             System.out.println("WARNING: " + rancher.getRunningServers() + " servers are running " + rancher.getRunningMatches() + " matches. (" + usage + "%)");
-            System.out.println("STARTED " + rancher.configuration.incremental() + " SERVERS");
+            System.out.println("STARTED " + rancher.configuration.serverManager().incremental() + " SERVERS");
         }
     }
 
