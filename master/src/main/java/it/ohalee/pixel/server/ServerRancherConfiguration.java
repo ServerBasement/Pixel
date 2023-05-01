@@ -5,7 +5,7 @@ import it.ohalee.pixel.match.SharedMatch;
 import it.ohalee.basementlib.api.server.BukkitServer;
 import it.ohalee.pixel.util.Basement;
 
-public abstract class ServerRancherConfiguration<E extends Enum<E> & PixelType, T extends SharedMatch<E>> {
+public abstract class ServerRancherConfiguration<E extends Enum<E> & PixelType, T extends SharedMatch> {
 
     public abstract String modeName();
 
@@ -15,9 +15,11 @@ public abstract class ServerRancherConfiguration<E extends Enum<E> & PixelType, 
 
     public abstract Class<T> sharedMatchClass();
 
+    public abstract Class<E> typeClass();
+
     public abstract ServerManagerConfiguration<E, T> serverManager();
 
-    public static abstract class ServerManagerConfiguration<E extends Enum<E> & PixelType, T extends SharedMatch<E>> {
+    public static abstract class ServerManagerConfiguration<E extends Enum<E> & PixelType, T extends SharedMatch> {
 
         public abstract boolean dynamicallyStartServers();
 

@@ -16,7 +16,7 @@ import org.redisson.client.codec.IntegerCodec;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public abstract class SharedMatch<E extends Enum<E> & PixelType> {
+public abstract class SharedMatch {
 
     @RId
     private final String name;
@@ -62,7 +62,5 @@ public abstract class SharedMatch<E extends Enum<E> & PixelType> {
             Basement.redis().publishMessage(new StatusRequest(getServer(), getName()));
         }
     }
-
-    public abstract Class<E> typeClass();
 
 }
