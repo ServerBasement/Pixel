@@ -14,6 +14,13 @@ artifacts {
     archives shadowJar
 }
 
+
+repositories {
+    maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+}
+
 dependencies {
     implementation project(":common")
+
+    compileOnly 'me.clip:placeholderapi:2.11.2'
 }
