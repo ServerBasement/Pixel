@@ -1,8 +1,8 @@
 package it.ohalee.pixel.server.handler;
 
+import it.ohalee.basementlib.api.redis.messages.handler.BasementMessageHandler;
 import it.ohalee.pixel.Pixel;
 import it.ohalee.pixel.util.Basement;
-import it.ohalee.basementlib.api.redis.messages.handler.BasementMessageHandler;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

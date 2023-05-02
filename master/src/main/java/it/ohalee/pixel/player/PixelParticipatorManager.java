@@ -32,10 +32,12 @@ public class PixelParticipatorManager extends AbstractUserManager<Player, UUID, 
     }
 
     @Override
-    public void sendToGameLobby(String username, String lobbyName) {}
+    public void sendToGameLobby(String username, String lobbyName) {
+    }
 
     @Override
-    public void sendToServer(String username, String serverID) {}
+    public void sendToServer(String username, String serverID) {
+    }
 
     @Override
     public boolean isOnRanch(UUID uuid) {

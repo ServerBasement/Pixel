@@ -32,7 +32,7 @@ public class AutoPurger extends BukkitRunnable {
             Statistics stats = service.get(Statistics.class, uuid);
             if (checkTime(stats)) deletedUsers++;
         }
-        System.out.println("[AutoPurger] Done in " + (System.currentTimeMillis()-start) + " ms.." + " Purged " + deletedUsers + ", Total scan on " + scanned + " statistics.");
+        System.out.println("[AutoPurger] Done in " + (System.currentTimeMillis() - start) + " ms.." + " Purged " + deletedUsers + ", Total scan on " + scanned + " statistics.");
     }
 
     private boolean checkTime(Statistics statistics) {

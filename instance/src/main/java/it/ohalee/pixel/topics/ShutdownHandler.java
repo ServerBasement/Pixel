@@ -1,7 +1,7 @@
 package it.ohalee.pixel.topics;
 
-import it.ohalee.pixel.util.Basement;
 import it.ohalee.basementlib.api.redis.messages.handler.BasementMessageHandler;
+import it.ohalee.pixel.util.Basement;
 import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Bukkit;
 

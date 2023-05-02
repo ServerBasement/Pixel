@@ -14,10 +14,8 @@ import java.util.UUID;
 public class PixelParticipator implements Participator {
 
     private final Player player;
-    private Statistics statistics;
-
     protected Queue queue;
-
+    private Statistics statistics;
     private Long lastUpdate;
 
     public PixelParticipator(Player player) {

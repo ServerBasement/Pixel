@@ -1,7 +1,7 @@
 package it.ohalee.pixel;
 
-import it.ohalee.pixel.api.Match;
 import it.ohalee.pixel.api.CrossServerManager;
+import it.ohalee.pixel.api.Match;
 import it.ohalee.pixel.match.PixelMatchManager;
 import it.ohalee.pixel.match.PixelType;
 import it.ohalee.pixel.match.SharedMatch;

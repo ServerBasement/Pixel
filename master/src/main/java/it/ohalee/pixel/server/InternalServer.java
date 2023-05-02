@@ -1,5 +1,6 @@
 package it.ohalee.pixel.server;
 
+import it.ohalee.basementlib.api.server.BukkitServer;
 import it.ohalee.pixel.Pixel;
 import it.ohalee.pixel.PixelProxy;
 import it.ohalee.pixel.match.PixelType;
@@ -7,7 +8,6 @@ import it.ohalee.pixel.match.SharedMatch;
 import it.ohalee.pixel.queue.StandardQueue;
 import it.ohalee.pixel.topics.ShutdownRequest;
 import it.ohalee.pixel.util.Basement;
-import it.ohalee.basementlib.api.server.BukkitServer;
 import lombok.Getter;
 import org.redisson.api.RMapCache;
 import org.redisson.api.map.event.EntryRemovedListener;

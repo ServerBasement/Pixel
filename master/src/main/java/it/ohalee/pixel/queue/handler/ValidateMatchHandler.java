@@ -1,9 +1,9 @@
 package it.ohalee.pixel.queue.handler;
 
+import it.ohalee.basementlib.api.redis.messages.handler.BasementMessageHandler;
 import it.ohalee.pixel.PixelProxy;
 import it.ohalee.pixel.server.InternalServer;
 import it.ohalee.pixel.topics.ValidateRequest;
-import it.ohalee.basementlib.api.redis.messages.handler.BasementMessageHandler;
 
 public class ValidateMatchHandler implements BasementMessageHandler<ValidateRequest> {
 

@@ -1,8 +1,8 @@
 package it.ohalee.pixel.server;
 
+import it.ohalee.basementlib.api.server.BukkitServer;
 import it.ohalee.pixel.match.PixelType;
 import it.ohalee.pixel.match.SharedMatch;
-import it.ohalee.basementlib.api.server.BukkitServer;
 import it.ohalee.pixel.util.Basement;
 
 public abstract class ServerRancherConfiguration<E extends Enum<E> & PixelType, T extends SharedMatch> {
