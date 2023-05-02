@@ -2,6 +2,7 @@ package it.ohalee.pixel.player;
 
 import it.ohalee.pixel.PixelProxy;
 import it.ohalee.pixel.api.CrossServerManager;
+import it.ohalee.pixel.api.UserNotFoundException;
 import it.ohalee.pixel.user.AbstractUserManager;
 import it.ohalee.pixel.util.Basement;
 import org.bukkit.entity.Player;
@@ -18,7 +19,11 @@ public class PixelParticipatorManager extends AbstractUserManager<Player, UUID, 
     }
 
     public static PixelParticipator get(UUID uuid) {
-        return PixelProxy.getRawProxy().getPlayerManager().user(uuid);
+        try {
+            return PixelProxy.getRawProxy().getPlayerManager().user(uuid);
+        } catch (UserNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
