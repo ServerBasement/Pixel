@@ -1,7 +1,7 @@
 package it.ohalee.pixel;
 
 import it.ohalee.pixel.api.Match;
-import it.ohalee.pixel.api.PlayerManager;
+import it.ohalee.pixel.api.CrossServerManager;
 import it.ohalee.pixel.match.PixelMatchManager;
 import it.ohalee.pixel.match.PixelType;
 import it.ohalee.pixel.match.SharedMatch;
@@ -17,7 +17,9 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public abstract class SubPixel<E extends Enum<E> & PixelType, T extends SharedMatch<E>, C extends Match<E, T>> {
+import java.util.UUID;
+
+public abstract class SubPixel<E extends Enum<E> & PixelType, T extends SharedMatch, C extends Match<E, T>> {
 
     protected static SubPixel<?, ?, ?> raw;
     @Getter
@@ -26,21 +28,30 @@ public abstract class SubPixel<E extends Enum<E> & PixelType, T extends SharedMa
     private final PlayerReceiver<E, T, C> playerReceiver;
     @Getter
     @Setter
-    private PlayerManager playerManager;
+    private CrossServerManager crossServerManager;
 
-    public SubPixel(JavaPlugin plugin, PlayerManager playerManager) {
+    public SubPixel(JavaPlugin plugin, CrossServerManager crossServerManager) {
         Basement.init();
 
         if (Basement.get().redisManager() == null)
             throw new RuntimeException("Redis is not enabled in BasementLib! Can't use pixel without redis!");
 
-        if (playerManager != null)
-            this.playerManager = playerManager;
+
+        new StaticTask(plugin);
+        new ShutdownHandler();
+        new StatusHandler();
+
+        matchManager = summonMatchManager();
+        playerReceiver = summonPlayerReceiver();
+        Bukkit.getPluginManager().registerEvents(playerReceiver, plugin);
+
+        if (crossServerManager != null)
+            this.crossServerManager = crossServerManager;
         else {
             if (Basement.get().remoteVelocityService() == null)
-                throw new RuntimeException("BasementLib is not enabled in Velocity! Can't use BasementLib-VelocityService without velocity!");
+                throw new RuntimeException("BasementLib is not enabled in Velocity! Can't use BasementLib-VelocityService without velocity! Please override this method in your implementation!");
 
-            this.playerManager = new PlayerManager() {
+            this.crossServerManager = new CrossServerManager() {
                 @Override
                 public void sendToGameLobby(String username, String lobbyName) {
                     Basement.get().remoteVelocityService().sendToServer(username, lobbyName);
@@ -50,19 +61,18 @@ public abstract class SubPixel<E extends Enum<E> & PixelType, T extends SharedMa
                 public void sendToServer(String username, String serverID) {
                     Basement.get().remoteVelocityService().sendToServer(username, serverID);
                 }
+
+                @Override
+                public boolean isOnRanch(UUID uuid) {
+                    return Basement.get().remoteVelocityService().isOnRanch(uuid, playerReceiver.lobbyName());
+                }
             };
         }
 
-        new StaticTask(plugin);
-        new ShutdownHandler();
-        new StatusHandler();
-        matchManager = summonMatchManager();
-        playerReceiver = summonPlayerReceiver();
-        Bukkit.getPluginManager().registerEvents(playerReceiver, plugin);
         raw = this;
     }
 
-    public static <SE extends Enum<SE> & PixelType, ST extends SharedMatch<SE>, SC extends Match<SE, ST>> SubPixel<SE, ST, SC> getRaw() {
+    public static <SE extends Enum<SE> & PixelType, ST extends SharedMatch, SC extends Match<SE, ST>> SubPixel<SE, ST, SC> getRaw() {
         return (SubPixel<SE, ST, SC>) raw;
     }
 
@@ -73,7 +83,7 @@ public abstract class SubPixel<E extends Enum<E> & PixelType, T extends SharedMa
     public void shutdown() {
         Basement.redis().clearTopicListeners(ShutdownRequest.TOPIC);
         Basement.redis().clearTopicListeners(StatusRequest.TOPIC);
-        Bukkit.getOnlinePlayers().forEach(p -> SubPixel.getRaw().getPlayerManager().sendToGameLobby(p.getName(), playerReceiver.lobbyName()));
+        Bukkit.getOnlinePlayers().forEach(p -> SubPixel.getRaw().getCrossServerManager().sendToGameLobby(p.getName(), playerReceiver.lobbyName()));
         matchManager.flush();
         matchManager.clearShared();
     }
