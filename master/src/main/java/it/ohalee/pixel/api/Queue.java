@@ -8,7 +8,7 @@ import org.redisson.api.RMapCache;
 import java.util.Optional;
 import java.util.Set;
 
-public interface Queue<E extends Enum<E> & PixelType, T extends SharedMatch<E>, P extends Participator> {
+public interface Queue<E extends Enum<E> & PixelType, T extends SharedMatch, P extends Participator> {
 
     E getType();
 
