@@ -16,7 +16,7 @@ import org.redisson.api.RMapCache;
 
 import java.util.*;
 
-public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends SharedMatch<E>, P extends PixelParticipator> implements Queue<E, T, P> {
+public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends SharedMatch, P extends PixelParticipator> implements Queue<E, T, P> {
 
     protected final String mode;
     protected final E queueType;

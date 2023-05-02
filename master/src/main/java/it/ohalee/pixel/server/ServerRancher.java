@@ -1,5 +1,7 @@
 package it.ohalee.pixel.server;
 
+import it.ohalee.basementlib.api.bukkit.events.BasementNewServerFound;
+import it.ohalee.basementlib.api.bukkit.events.BasementServerRemoved;
 import it.ohalee.pixel.Pixel;
 import it.ohalee.pixel.match.PixelType;
 import it.ohalee.pixel.match.SharedMatch;
@@ -9,8 +11,6 @@ import it.ohalee.pixel.server.handler.MasterSwitchMessage;
 import it.ohalee.pixel.topics.ValidateRequest;
 import it.ohalee.pixel.util.Basement;
 import it.ohalee.pixel.util.StaticTask;
-import it.ohalee.basementlib.api.bukkit.events.BasementNewServerFound;
-import it.ohalee.basementlib.api.bukkit.events.BasementServerRemoved;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Setter
-public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch<E>> implements Listener {
+public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch> implements Listener {
 
     protected final ServerRancherConfiguration<E, T> configuration;
     protected final Map<String, InternalServer<E, T>> internalServers = new HashMap<>();
@@ -134,6 +134,10 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch<
 
     public Optional<InternalServer<E, T>> get(String name) {
         return Optional.ofNullable(internalServers.get(name));
+    }
+
+    public Class<E> typeClass() {
+        return configuration.typeClass();
     }
 
 }

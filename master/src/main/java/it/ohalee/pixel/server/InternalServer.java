@@ -12,7 +12,7 @@ import lombok.Getter;
 import org.redisson.api.RMapCache;
 import org.redisson.api.map.event.EntryRemovedListener;
 
-public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch<E>> {
+public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch> {
 
     @Getter
     private final int index;
@@ -65,7 +65,7 @@ public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch
 
     public void validateMatch(String matchName) {
         T match = Basement.rclient().getLiveObjectService().get(sharedMatchClass, matchName);
-        StandardQueue<E, T, ?> queue = (StandardQueue<E, T, ?>) PixelProxy.getRawProxy().getQueue(E.valueOf(match.typeClass(), match.getType()));
+        StandardQueue<E, T, ?> queue = (StandardQueue<E, T, ?>) PixelProxy.getRawProxy().getQueue(E.valueOf(PixelProxy.getRawProxy().getRancher().typeClass(), match.getType()));
         queue.validateMatch(match);
         loadingMatch(false);
     }
@@ -81,7 +81,7 @@ public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch
 
     public void dropMatch(String matchName) {
         T match = Basement.rclient().getLiveObjectService().get(sharedMatchClass, matchName);
-        StandardQueue<E, T, ?> queue = (StandardQueue<E, T, ?>) PixelProxy.getRawProxy().getQueue(E.valueOf(match.typeClass(), match.getType()));
+        StandardQueue<E, T, ?> queue = (StandardQueue<E, T, ?>) PixelProxy.getRawProxy().getQueue(E.valueOf(PixelProxy.getRawProxy().getRancher().typeClass(), match.getType()));
         queue.dropMatch(matchName);
     }
 
