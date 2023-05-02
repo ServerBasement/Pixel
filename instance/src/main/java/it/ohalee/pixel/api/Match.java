@@ -1,5 +1,6 @@
 package it.ohalee.pixel.api;
 
+import it.ohalee.pixel.SubPixel;
 import it.ohalee.pixel.match.PixelType;
 import it.ohalee.pixel.match.SharedMatch;
 import it.ohalee.pixel.match.SharedMatchStatus;
@@ -11,7 +12,7 @@ import org.bukkit.entity.Player;
 import org.redisson.api.RMapCache;
 import org.redisson.api.map.event.EntryCreatedListener;
 
-public abstract class Match<E extends Enum<E> & PixelType, T extends SharedMatch<E>> {
+public abstract class Match<E extends Enum<E> & PixelType, T extends SharedMatch> {
 
     @Getter
     protected final T shared;
@@ -27,7 +28,7 @@ public abstract class Match<E extends Enum<E> & PixelType, T extends SharedMatch
 
     public Match(T shared) {
         this.shared = shared;
-        this.type = E.valueOf(shared.typeClass(), shared.getType());
+        this.type = E.valueOf((Class<E>) SubPixel.getRaw().getMatchManager().typeClass(), shared.getType());
         joining = Basement.rclient().getMapCache(shared.getName() + "_joining");
         shared_spectators = Basement.rclient().getMapCache(shared.getName() + "_spectators");
     }

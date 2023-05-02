@@ -12,7 +12,7 @@ import org.redisson.api.RMapCache;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-public abstract class PixelMatchManager<E extends Enum<E> & PixelType, T extends SharedMatch<E>, C extends Match<E, T>> {
+public abstract class PixelMatchManager<E extends Enum<E> & PixelType, T extends SharedMatch, C extends Match<E, T>> {
 
     private static RMapCache<String, String> shared;
     private final Map<String, C> matches = new HashMap<>();
@@ -38,6 +38,8 @@ public abstract class PixelMatchManager<E extends Enum<E> & PixelType, T extends
         }
     }
 
+    public abstract Class<E> typeClass();
+
     public abstract String getLobby();
 
     public void removeMatch(C match) {
@@ -52,7 +54,7 @@ public abstract class PixelMatchManager<E extends Enum<E> & PixelType, T extends
 
         CompletableFuture.runAsync(() -> {
             for (Player player : world.getPlayers())
-                SubPixel.getRaw().getPlayerManager().sendToGameLobby(player.getName(), getLobby());
+                SubPixel.getRaw().getCrossServerManager().sendToGameLobby(player.getName(), getLobby());
         }).whenComplete((voidValue, error) ->
                 StaticTask.runBukkitTaskTimer(new WorldRemoverTask(world), 0L, 10L, false));
     }

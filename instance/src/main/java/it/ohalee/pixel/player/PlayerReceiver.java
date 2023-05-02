@@ -15,13 +15,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class PlayerReceiver<E extends Enum<E> & PixelType, T extends SharedMatch<E>, C extends Match<E, T>> implements Listener {
+public abstract class PlayerReceiver<E extends Enum<E> & PixelType, T extends SharedMatch, C extends Match<E, T>> implements Listener {
 
     protected final static Map<String, String> joining = new HashMap<>();
 
     public static void addJoining(String username, String matchname) {
         joining.put(username, matchname);
-        SubPixel.getRaw().getPlayerManager().sendToServer(username, Basement.getBukkit().getServerID());
+        SubPixel.getRaw().getCrossServerManager().sendToServer(username, Basement.getBukkit().getServerID());
     }
 
     public static void removeJoining(String username) {
@@ -39,7 +39,7 @@ public abstract class PlayerReceiver<E extends Enum<E> & PixelType, T extends Sh
         String matchName = joining.get(player.getName());
         if (matchName == null) {
             if (player.hasPermission(bypassPermission())) return;
-            SubPixel.getRaw().getPlayerManager().sendToGameLobby(player.getName(), lobbyName());
+            SubPixel.getRaw().getCrossServerManager().sendToGameLobby(player.getName(), lobbyName());
             return;
         }
         C match = SubPixel.<E, T, C>getRaw().getMatchManager().getMatch(matchName);

@@ -8,7 +8,7 @@ import org.redisson.api.map.event.EntryEvent;
 
 import java.util.concurrent.CompletableFuture;
 
-public abstract class IncomingSharedListener<E extends Enum<E> & PixelType, T extends SharedMatch<E>, C extends Match<E, T>> implements EntryCreatedListener<String, String> {
+public abstract class IncomingSharedListener<E extends Enum<E> & PixelType, T extends SharedMatch, C extends Match<E, T>> implements EntryCreatedListener<String, String> {
 
     @Override
     public void onCreated(EntryEvent<String, String> event) {
