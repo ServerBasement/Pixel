@@ -2,9 +2,11 @@ package it.ohalee.pixel.api;
 
 import org.bukkit.entity.Player;
 
-public interface Participator {
+import java.util.UUID;
 
-    void setQueue(Queue<?, ?, Participator> queue);
+public interface Participator extends PixelUser<UUID> {
+
+    void queue(Queue<?, ?, Participator> queue);
 
     void removeFromQueue();
 
