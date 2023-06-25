@@ -2,8 +2,6 @@ package it.ohalee.pixel.server.statistics;
 
 import it.ohalee.pixel.Pixel;
 import it.ohalee.pixel.data.PixelDataHolder;
-import it.ohalee.pixel.data.leaderboard.LeaderBoardReset;
-import it.ohalee.pixel.data.leaderboard.LeaderBoardUpdater;
 import it.ohalee.pixel.placeholder.LobbyPlaceholders;
 import it.ohalee.pixel.player.statistics.AutoPurger;
 import it.ohalee.pixel.player.statistics.StatisticsLoader;
@@ -25,9 +23,6 @@ public class PixelStatistics<T extends Enum<T> & StatsType> {
 
         if (configuration.enablePlaceholderAPI()) {
             new LobbyPlaceholders<>(configuration.genericModePrefix());
-            new LeaderBoardUpdater(configuration.genericModePrefix());
-            new LeaderBoardReset();
-
         }
 
         if (Pixel.LEADER)
