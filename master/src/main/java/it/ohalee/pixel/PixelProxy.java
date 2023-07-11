@@ -7,8 +7,6 @@ import it.ohalee.pixel.match.SharedMatch;
 import it.ohalee.pixel.player.PixelParticipatorManager;
 import it.ohalee.pixel.server.ServerRancher;
 import it.ohalee.pixel.server.handler.MasterSwitchMessage;
-import it.ohalee.pixel.server.statistics.PixelStatistics;
-import it.ohalee.pixel.stats.StatsType;
 import it.ohalee.pixel.util.Basement;
 import lombok.Getter;
 
@@ -23,8 +21,6 @@ public class PixelProxy<
 
     @Getter
     protected static PixelProxy rawProxy;
-    @Getter
-    private static PixelStatistics statistics;
 
     private final HashMap<T, V> queues = new HashMap<>();
     @Getter
@@ -48,10 +44,6 @@ public class PixelProxy<
 
     protected void setPixelParticipatorManager(PixelParticipatorManager playerManager) {
         this.playerManager = playerManager;
-    }
-
-    protected <C extends Enum<C> & StatsType> void setStatistics(PixelStatistics<C> statistics) {
-        PixelProxy.statistics = statistics;
     }
 
     public void shutdown() {

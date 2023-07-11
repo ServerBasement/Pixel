@@ -5,6 +5,7 @@ import it.ohalee.basementlib.api.bukkit.events.BasementServerRemoved;
 import it.ohalee.pixel.Pixel;
 import it.ohalee.pixel.match.PixelType;
 import it.ohalee.pixel.match.SharedMatch;
+import it.ohalee.pixel.placeholder.LobbyPlaceholders;
 import it.ohalee.pixel.queue.handler.ValidateMatchHandler;
 import it.ohalee.pixel.server.handler.MasterSwitchHandler;
 import it.ohalee.pixel.server.handler.MasterSwitchMessage;
@@ -79,6 +80,11 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch>
             }
             StaticTask.runBukkitTaskTimer(new DangerTask(this), 20L * 3, 20L * 3, true);
         }
+
+        if (configuration.lobbyConfiguration().enablePlaceholderAPI()) {
+            new LobbyPlaceholders<>(configuration.lobbyConfiguration().genericModePrefix());
+        }
+
     }
 
     protected boolean startServer(int many) {

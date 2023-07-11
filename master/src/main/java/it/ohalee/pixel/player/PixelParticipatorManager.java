@@ -4,7 +4,6 @@ import it.ohalee.pixel.PixelProxy;
 import it.ohalee.pixel.api.CrossServerManager;
 import it.ohalee.pixel.api.UserNotFoundException;
 import it.ohalee.pixel.user.AbstractUserManager;
-import it.ohalee.pixel.util.Basement;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -13,8 +12,7 @@ public class PixelParticipatorManager extends AbstractUserManager<Player, UUID, 
 
     private final String ranch;
 
-    public PixelParticipatorManager(String ranch, boolean statsEnabled) {
-        super(statsEnabled);
+    public PixelParticipatorManager(String ranch) {
         this.ranch = ranch;
     }
 
@@ -37,13 +35,6 @@ public class PixelParticipatorManager extends AbstractUserManager<Player, UUID, 
 
     @Override
     public void sendToServer(String username, String serverID) {
-    }
-
-    @Override
-    public boolean isOnRanch(UUID uuid) {
-        if (Basement.get().remoteVelocityService() == null)
-            throw new RuntimeException("BasementLib is not enabled in Velocity! Can't use BasementLib-VelocityService without velocity! Please override this method in your implementation!");
-        return Basement.get().remoteVelocityService().isOnRanch(uuid, ranch);
     }
 
 }

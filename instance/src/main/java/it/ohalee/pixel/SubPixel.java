@@ -17,8 +17,6 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.UUID;
-
 public abstract class SubPixel<E extends Enum<E> & PixelType, T extends SharedMatch, C extends Match<E, T>> {
 
     protected static SubPixel<?, ?, ?> raw;
@@ -60,11 +58,6 @@ public abstract class SubPixel<E extends Enum<E> & PixelType, T extends SharedMa
                 @Override
                 public void sendToServer(String username, String serverID) {
                     Basement.get().remoteVelocityService().sendToServer(username, serverID);
-                }
-
-                @Override
-                public boolean isOnRanch(UUID uuid) {
-                    return Basement.get().remoteVelocityService().isOnRanch(uuid, playerReceiver.lobbyName());
                 }
             };
         }

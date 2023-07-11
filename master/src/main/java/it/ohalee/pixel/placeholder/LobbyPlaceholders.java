@@ -2,10 +2,6 @@ package it.ohalee.pixel.placeholder;
 
 import it.ohalee.pixel.PixelProxy;
 import it.ohalee.pixel.match.PixelType;
-import it.ohalee.pixel.player.PixelParticipator;
-import it.ohalee.pixel.player.PixelParticipatorManager;
-import it.ohalee.pixel.stats.Statistics;
-import it.ohalee.pixel.stats.StatsType;
 import lombok.RequiredArgsConstructor;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
@@ -32,7 +28,7 @@ public class LobbyPlaceholders<E extends Enum<E> & PixelType> extends Placeholde
 
     @Override
     public String getIdentifier() {
-        return "pixel";
+        return prefix;
     }
 
     @Override
@@ -52,21 +48,7 @@ public class LobbyPlaceholders<E extends Enum<E> & PixelType> extends Placeholde
             Enum<E> type = E.valueOf(PixelProxy.getRawProxy().getRancher().typeClass(), s.replaceFirst("ONLINE_", ""));
             return String.valueOf(PixelProxy.getRawProxy().getQueue(type).playerLoad());
         }
-
-        PixelParticipator participator = PixelParticipatorManager.get(player.getUniqueId());
-        if (participator == null) {
-            return "Updating";
-        }
-
-        Statistics statistics = participator.statistics();
-        if (statistics == null) return "...";
-
-        for (StatsType stat : PixelProxy.getStatistics().statsValues()) {
-            if (s.equals(stat.placeholder())) {
-                return String.valueOf(statistics.obtain(stat));
-            }
-        }
-        return "Not valid stats_type: " + s;
+        return s;
     }
 
 }

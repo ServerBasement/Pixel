@@ -4,8 +4,7 @@ import java.util.UUID;
 
 public class InstanceUserManager extends AbstractUserManager<UUID, UUID, User> {
 
-    public InstanceUserManager(boolean statsEnabled) {
-        super(statsEnabled);
+    public InstanceUserManager() {
     }
 
     @Override

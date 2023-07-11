@@ -2,7 +2,6 @@ package it.ohalee.pixel.player;
 
 import it.ohalee.pixel.api.Participator;
 import it.ohalee.pixel.api.Queue;
-import it.ohalee.pixel.stats.Statistics;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.bukkit.entity.Player;
@@ -15,16 +14,10 @@ public class PixelParticipator implements Participator {
 
     private final Player player;
     protected Queue queue;
-    private Statistics statistics;
     private Long lastUpdate;
 
     public PixelParticipator(Player player) {
         this.player = player;
-    }
-
-    @Override
-    public void assign(Statistics statistics) {
-        this.statistics = statistics;
     }
 
     @Override

@@ -19,6 +19,8 @@ public abstract class ServerRancherConfiguration<E extends Enum<E> & PixelType, 
 
     public abstract ServerManagerConfiguration<E, T> serverManager();
 
+    public abstract LobbyConfiguration lobbyConfiguration();
+
     public static abstract class ServerManagerConfiguration<E extends Enum<E> & PixelType, T extends SharedMatch> {
 
         public abstract boolean dynamicallyStartServers();
@@ -58,6 +60,14 @@ public abstract class ServerRancherConfiguration<E extends Enum<E> & PixelType, 
             public abstract void startServer(String name);
 
         }
+
+    }
+
+    public static abstract class LobbyConfiguration {
+
+        public abstract String genericModePrefix();
+
+        public abstract boolean enablePlaceholderAPI();
 
     }
 
