@@ -29,8 +29,6 @@ public abstract class Pixel<T extends Enum<T> & PixelType, S extends SharedMatch
 
     public PixelProxy<T, S, P, V> process() {
         PixelProxy.rawProxy = this.proxy;
-        if (proxy.getPlayerManager() == null)
-            throw new NullPointerException("PixelParticipatorManager is not registered.");
         proxy.getRancher().start();
         return this.proxy;
     }
