@@ -56,7 +56,11 @@ public abstract class PixelMatchManager<E extends Enum<E> & PixelType, T extends
             for (Player player : world.getPlayers())
                 SubPixel.getRaw().getCrossServerManager().sendToGameLobby(player.getName(), getLobby());
         }).whenComplete((voidValue, error) ->
-                StaticTask.runBukkitTaskTimer(new WorldRemoverTask(world), 0L, 10L, false));
+                StaticTask.runBukkitTaskTimer(new WorldRemoverTask(postWorldUnload(match), world), 0L, 10L, false));
+    }
+
+    protected Runnable postWorldUnload(C match) {
+        return () -> {};
     }
 
     public C getMatch(String name) {
