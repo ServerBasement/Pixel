@@ -76,7 +76,7 @@ public abstract class SubPixel<E extends Enum<E> & PixelType, T extends SharedMa
     public void shutdown() {
         Basement.redis().clearTopicListeners(ShutdownRequest.TOPIC);
         Basement.redis().clearTopicListeners(StatusRequest.TOPIC);
-        Bukkit.getOnlinePlayers().forEach(p -> SubPixel.getRaw().getCrossServerManager().sendToGameLobby(p.getName(), playerReceiver.lobbyName()));
+        Bukkit.getOnlinePlayers().forEach(p -> SubPixel.getRaw().getCrossServerManager().sendToGameLobby(p.getName(), SubPixel.getRaw().getMatchManager().getLobby()));
         matchManager.flush();
         matchManager.clearShared();
     }

@@ -30,8 +30,6 @@ public abstract class PlayerReceiver<E extends Enum<E> & PixelType, T extends Sh
 
     public abstract String bypassPermission();
 
-    public abstract String lobbyName();
-
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         event.setJoinMessage(null);
@@ -39,7 +37,7 @@ public abstract class PlayerReceiver<E extends Enum<E> & PixelType, T extends Sh
         String matchName = joining.get(player.getName());
         if (matchName == null) {
             if (player.hasPermission(bypassPermission())) return;
-            SubPixel.getRaw().getCrossServerManager().sendToGameLobby(player.getName(), lobbyName());
+            SubPixel.getRaw().getCrossServerManager().sendToGameLobby(player.getName(), SubPixel.getRaw().getMatchManager().getLobby());
             return;
         }
         C match = SubPixel.<E, T, C>getRaw().getMatchManager().getMatch(matchName);
