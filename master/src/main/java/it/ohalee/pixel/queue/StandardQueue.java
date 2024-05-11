@@ -81,6 +81,8 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
 
     public T initMatch(InternalServer<E, T> server, String mapName) {
         if (mapName == null) return null;
+        if (server.isLoadingMatch()) return null;
+
         server.loadingMatch(true);
 
         // Match creation
@@ -103,13 +105,15 @@ public abstract class StandardQueue<E extends Enum<E> & PixelType, T extends Sha
     public void validateMatch(T match) {
         tunnels.fastPut(match.getName(), match);
         match.setValidated(true);
-    //    Pixel.LOGGER.info("[Queue " + queueType.toString() + "] Match " + match.getName() + " validated: " + System.currentTimeMillis());
+        Pixel.LOGGER.info("[Queue " + queueType.toString() + "] Match " + match.getName() + " validated: " + System.currentTimeMillis());
     }
 
     @Override
     public T createMatch() {
         T match = initMatch();
-        if (match == null) Pixel.LOGGER.warning("[Queue " + queueType.toString() + "] Failed to create match.");
+        if (match == null) {
+         //   Pixel.LOGGER.warning("[Queue " + queueType.toString() + "] Failed to create match.");
+        }
         return match;
     }
 

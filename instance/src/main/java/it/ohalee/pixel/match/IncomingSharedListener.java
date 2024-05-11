@@ -16,6 +16,7 @@ public abstract class IncomingSharedListener<E extends Enum<E> & PixelType, T ex
         instantiate(shared, event.getKey(), event.getValue()).whenCompleteAsync((match, throwable) -> {
                     if (throwable != null)
                         throwable.printStackTrace();
+
                     SubPixel.<E, T, C>getRaw().getMatchManager().putMatch(match);
                     match.processFill();
                 }

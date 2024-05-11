@@ -28,6 +28,7 @@ public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch
     @Getter
     private boolean seekable;
     private int stopCount = 0;
+    @Getter
     private boolean loadingMatch = false;
 
     public InternalServer(int index, BukkitServer server, boolean terminable, Class<T> sharedMatchClass) {
@@ -45,10 +46,6 @@ public class InternalServer<E extends Enum<E> & PixelType, T extends SharedMatch
 
     public void loadingMatch(boolean loadingMatch) {
         this.loadingMatch = loadingMatch;
-    }
-
-    public boolean isLoadingMatch() {
-        return loadingMatch;
     }
 
     public void addMatch(String matchName, String mapName) {

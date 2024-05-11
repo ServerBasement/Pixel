@@ -31,9 +31,7 @@ public abstract class PixelMatchManager<E extends Enum<E> & PixelType, T extends
     }
 
     public void flush() {
-        Iterator<C> iterator = matches.values().iterator();
-        while (iterator.hasNext()) {
-            C match = iterator.next();
+        for (C match : new HashSet<>(matches.values())) {
             removeMatch(match);
         }
     }
