@@ -5,6 +5,7 @@ import it.ohalee.pixel.api.Match;
 import it.ohalee.pixel.match.PixelType;
 import it.ohalee.pixel.match.SharedMatch;
 import it.ohalee.pixel.util.Basement;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -50,5 +51,18 @@ public abstract class PlayerReceiver<E extends Enum<E> & PixelType, T extends Sh
 
     @EventHandler
     public abstract void onLeave(PlayerKickEvent event);
+
+    public boolean processPlayerAgain(String username) {
+        String matchName = joining.get(username);
+        if (matchName == null) return false;
+
+        Player player = Bukkit.getPlayerExact(username);
+        if (player == null) return false;
+
+        C match = SubPixel.<E, T, C>getRaw().getMatchManager().getMatch(matchName);
+        match.letJoin(player);
+        joining.remove(player.getName());
+        return true;
+    }
 
 }
