@@ -43,7 +43,7 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch>
         lobbies.add(Basement.getBukkit().getServerID());
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.configuration = configuration;
-        available_indexes = IntStream.range(1, configuration.serverManager().maxAmountOfServers()).boxed().collect(Collectors.toList());
+        available_indexes = IntStream.range(1, configuration.serverManager().maxAmountOfServers() + 1).boxed().collect(Collectors.toList());
         this.instancePrefix = configuration.instancePrefix();
         this.MAX_MATCHES_PER_SERVER = configuration.maxMatchesPerServer();
         this.WARNING_PERCENTAGE = configuration.warningPercentage();
@@ -63,10 +63,14 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch>
         if (Basement.get().redisManager() == null)
             throw new RuntimeException("Redis is not enabled in BasementLib! Can't use pixel without redis!");
 
-        // For basement servermanager redis is needed so we can use it cuz pixel needs it too
         Basement.get().serverManager().getOnlineServers(instancePrefix)
                 .forEach(server -> {
-                    int index = Integer.parseInt(server.getName().split("_")[2]);
+                    int index;
+                    try {
+                        index = Integer.parseInt(server.getName().charAt(server.getName().length() - 1) + "");
+                    } catch (NumberFormatException e) {
+                        index = available_indexes.get(0);
+                    }
                     available_indexes.remove(Integer.valueOf(index));
                     internalServers.put(server.getName(), configuration.serverManager().internalSupplier(index, server, internalServers.size() > configuration.serverManager().minimumIdle(), configuration.sharedMatchClass()));
                     Pixel.LOGGER.info("Found " + server.getName() + " server loaded at index " + index);
@@ -103,7 +107,12 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch>
     @EventHandler
     protected void serverFound(BasementNewServerFound serverEvent) {
         if (serverEvent.getServer().getName().startsWith(instancePrefix)) {
-            int index = Integer.parseInt(serverEvent.getServer().getName().split("_")[2]);
+            int index;
+            try {
+                index = Integer.parseInt(serverEvent.getServer().getName().charAt(serverEvent.getServer().getName().length() - 1) + "");
+            } catch (NumberFormatException e) {
+                index = requestedServers.keySet().stream().findFirst().orElse(1);
+            }
             requestedServers.remove(index);
             InternalServer<E, T> server = configuration.serverManager().internalSupplier(index, serverEvent.getServer(), internalServers.size() > configuration.serverManager().minimumIdle(), configuration.sharedMatchClass());
             internalServers.put(serverEvent.getServer().getName(), server);
