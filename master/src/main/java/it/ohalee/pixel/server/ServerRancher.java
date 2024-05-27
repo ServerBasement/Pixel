@@ -29,7 +29,7 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch>
     protected final ServerRancherConfiguration<E, T> configuration;
     protected final Map<String, InternalServer<E, T>> internalServers = new HashMap<>();
     protected final Map<Integer, Long> requestedServers = new HashMap<>();
-    private final String modeName;
+    private final String instancePrefix;
     private final RSetCache<String> lobbies;
     protected int MAX_MATCHES_PER_SERVER;
     protected double WARNING_PERCENTAGE;
@@ -44,7 +44,7 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch>
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.configuration = configuration;
         available_indexes = IntStream.range(1, configuration.serverManager().maxAmountOfServers()).boxed().collect(Collectors.toList());
-        this.modeName = configuration.modeName();
+        this.instancePrefix = configuration.instancePrefix();
         this.MAX_MATCHES_PER_SERVER = configuration.maxMatchesPerServer();
         this.WARNING_PERCENTAGE = configuration.warningPercentage();
     }
@@ -64,7 +64,7 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch>
             throw new RuntimeException("Redis is not enabled in BasementLib! Can't use pixel without redis!");
 
         // For basement servermanager redis is needed so we can use it cuz pixel needs it too
-        Basement.get().serverManager().getOnlineServers(modeName + "_instance_")
+        Basement.get().serverManager().getOnlineServers(instancePrefix)
                 .forEach(server -> {
                     int index = Integer.parseInt(server.getName().split("_")[2]);
                     available_indexes.remove(Integer.valueOf(index));
@@ -93,7 +93,7 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch>
         for (int i = 0; i < many; i++) {
             if (available_indexes.isEmpty()) return false;
             Integer index = available_indexes.remove(0);
-            configuration.serverManager().dynamicServerManager().startServer(modeName + "_instance_" + index);
+            configuration.serverManager().dynamicServerManager().startServer(instancePrefix + index);
             requestedServers.put(index, System.currentTimeMillis());
         }
         nextPossibleStart = System.currentTimeMillis() + 30_000; // 30 seconds
@@ -102,7 +102,7 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch>
 
     @EventHandler
     protected void serverFound(BasementNewServerFound serverEvent) {
-        if (serverEvent.getServer().getName().startsWith(modeName + "_instance_")) {
+        if (serverEvent.getServer().getName().startsWith(instancePrefix)) {
             int index = Integer.parseInt(serverEvent.getServer().getName().split("_")[2]);
             requestedServers.remove(index);
             InternalServer<E, T> server = configuration.serverManager().internalSupplier(index, serverEvent.getServer(), internalServers.size() > configuration.serverManager().minimumIdle(), configuration.sharedMatchClass());
@@ -113,7 +113,7 @@ public class ServerRancher<E extends Enum<E> & PixelType, T extends SharedMatch>
 
     @EventHandler
     protected void serverRemoved(BasementServerRemoved serverEvent) {
-        if (serverEvent.getServer().getName().startsWith(modeName + "_instance_")) {
+        if (serverEvent.getServer().getName().startsWith(instancePrefix)) {
             InternalServer<E, T> server = internalServers.remove(serverEvent.getServer().getName());
             server.destroy();
             available_indexes.add(server.getIndex());

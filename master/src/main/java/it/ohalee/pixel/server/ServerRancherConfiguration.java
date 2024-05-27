@@ -9,6 +9,8 @@ public abstract class ServerRancherConfiguration<E extends Enum<E> & PixelType, 
 
     public abstract String modeName();
 
+    public abstract String instancePrefix();
+
     public abstract int maxMatchesPerServer();
 
     public abstract double warningPercentage();
